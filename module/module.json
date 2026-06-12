@@ -1,0 +1,21 @@
+{
+    "key": "module_cleaner",
+    "name": "Longlink Module Cleaner",
+    "version": "0.1.0a",
+    "description": "Longlink Module Cleaner addon module. Source of truth: tichm30/longlink-module-cleaner.",
+    "runtime": {
+        "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\ModuleCleaner\\": "src/"
+        }
+    },
+    "owned_tables": [],
+    "requires_host_min_version": "0.7.8r-CX",
+    "notes": [
+        "Seeded scaffold. Build out src/, routes/, resources/, database/migrations/ per the governing brief (populate batch 0.1.0b).",
+        "owned_tables starts empty. Every table this module creates MUST be prefixed module_cleaner_ (host assertAddonOwnedTable rule) and MUST be added here - expected: cleanup logs, quarantine index, backup-set index.",
+        "Destructive removal goes through host purge primitives only (host repo lands them first; bump requires_host_min_version to that release). The cleaner orchestrates and audits; it never bypasses the forbidden-tables guard."
+    ]
+}

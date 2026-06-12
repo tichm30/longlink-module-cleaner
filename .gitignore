@@ -1,0 +1,29 @@
+# Build / package output
+releases/
+*.zip
+*.zip.sha256
+
+# Vendor / dependencies (re-built by the host or by packaging script)
+vendor/
+node_modules/
+
+# Local environment
+.env
+.env.local
+*.local
+
+# Test/runtime junk
+storage/
+.phpunit.result.cache
+.phpunit.cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+._*
+__MACOSX/
+Thumbs.db
+
+# Logs
+*.log
