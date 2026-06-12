@@ -1,8 +1,8 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0a",
-    "description": "Longlink Module Cleaner addon module. Source of truth: tichm30/longlink-module-cleaner.",
+    "version": "0.1.0b",
+    "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
     },
@@ -11,11 +11,60 @@
             "Modules\\ModuleCleaner\\": "src/"
         }
     },
-    "owned_tables": [],
-    "requires_host_min_version": "0.7.8r-CX",
+    "owned_tables": [
+        "module_cleaner_cleanup_logs"
+    ],
+    "database_migrations": [
+        "2026_06_13_020000_create_module_cleaner_cleanup_logs_table"
+    ],
+    "permissions": [
+        "module_cleaner.view",
+        "module_cleaner.plan",
+        "module_cleaner.purge"
+    ],
+    "routes": [
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner",
+            "name": "admin.module-cleaner.index"
+        },
+        {
+            "method": "POST",
+            "path": "/admin/module-cleaner/modules/{module}/plan",
+            "name": "admin.module-cleaner.modules.plan"
+        }
+    ],
+    "menus": [
+        "settings.module_cleaner"
+    ],
+    "ownership": {
+        "tables": [
+            "module_cleaner_cleanup_logs"
+        ],
+        "permissions": [
+            "module_cleaner.view",
+            "module_cleaner.plan",
+            "module_cleaner.purge"
+        ],
+        "settings": [],
+        "storage_paths": [
+            "modules/module_cleaner"
+        ]
+    },
+    "cleanup": {
+        "default_mode": "backup_then_delete",
+        "requires_backup": true,
+        "requires_step_up_mfa": true,
+        "allow_hard_delete": false,
+        "retain_audit_logs": true,
+        "safe_to_delete_tables": [
+            "module_cleaner_cleanup_logs"
+        ]
+    },
+    "requires_host_min_version": "0.7.8t-CX",
     "notes": [
-        "Seeded scaffold. Build out src/, routes/, resources/, database/migrations/ per the governing brief (populate batch 0.1.0b).",
-        "owned_tables starts empty. Every table this module creates MUST be prefixed module_cleaner_ (host assertAddonOwnedTable rule) and MUST be added here - expected: cleanup logs, quarantine index, backup-set index.",
-        "Destructive removal goes through host purge primitives only (host repo lands them first; bump requires_host_min_version to that release). The cleaner orchestrates and audits; it never bypasses the forbidden-tables guard."
+        "Populate release. This module inventories ownership snapshots and creates dry-run cleanup plans through the host AddonModuleRegistry only.",
+        "Owned data is restricted to module_cleaner_* tables and module-owned storage. Core settings, permissions, navigation rows, and provider registry definitions self-clean through host registries.",
+        "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ]
 }

@@ -22,11 +22,19 @@ if [ -z "$VERSION" ]; then
 fi
 
 ZIP_NAME="longlink-module-cleaner-${VERSION}.zip"
+BUILD_ROOT="$ROOT/.build/module_cleaner_zip"
+ZIP_ROOT="$BUILD_ROOT/module_cleaner"
 mkdir -p releases
+rm -rf "$BUILD_ROOT"
+mkdir -p "$ZIP_ROOT"
 rm -f "releases/${ZIP_NAME}" "releases/${ZIP_NAME}.sha256"
 
+cp -R module/. "$ZIP_ROOT/"
+
 # Hygiene exclusions (mirrors the host's release builder)
-zip -qr "releases/${ZIP_NAME}" module/ \
+(
+    cd "$BUILD_ROOT"
+    zip -qr "$ROOT/releases/${ZIP_NAME}" module_cleaner/ \
     -x "*/.DS_Store" \
     -x ".DS_Store" \
     -x "*/__MACOSX/*" \
@@ -35,6 +43,9 @@ zip -qr "releases/${ZIP_NAME}" module/ \
     -x "*/.git/*" \
     -x "*/.env" \
     -x "*/storage/*"
+)
+
+rm -rf "$BUILD_ROOT"
 
 # SHA-256 sidecar
 ( cd releases && shasum -a 256 "$ZIP_NAME" > "${ZIP_NAME}.sha256" )
