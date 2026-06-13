@@ -10,7 +10,7 @@ $inventorySource = (string) file_get_contents($root.'/module/src/Support/Residue
 $viewSource = (string) file_get_contents($root.'/module/resources/views/admin/index.blade.php');
 
 foreach ([
-    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0c.',
+    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0d.',
     "'surfaces' => ['tables', 'settings', 'permissions', 'navigation', 'storage', 'packages', 'module_files']" => 'Cleaner must pass every recognised residue surface to the host primitive.',
     'Protected module - cleanup planning disabled.' => 'Protected modules must fail closed server-side.',
     'module_generator' => 'Module Generator must be in the protected planning set.',

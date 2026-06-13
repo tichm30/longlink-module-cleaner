@@ -197,9 +197,16 @@ class ResidueInventoryService
             return [];
         }
 
+        $hasModuleKey = Schema::hasColumn('addon_module_packages', 'module_key');
+
         return DB::table('addon_module_packages')
-            ->where('addon_module_id', $module->id)
-            ->orWhere('module_key', $module->key)
+            ->where(function ($query) use ($module, $hasModuleKey): void {
+                $query->where('addon_module_id', $module->id);
+
+                if ($hasModuleKey) {
+                    $query->orWhere('module_key', $module->key);
+                }
+            })
             ->selectRaw('storage_path, COUNT(*) as rows, COALESCE(SUM(file_size_bytes), 0) as bytes')
             ->groupBy('storage_path')
             ->get()

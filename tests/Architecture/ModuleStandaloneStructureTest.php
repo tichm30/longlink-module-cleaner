@@ -8,7 +8,7 @@ $root = module_repo_root();
 $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
-module_assert_same('0.1.0c', $manifest['version'] ?? null, 'Canonical release must be 0.1.0c.');
+module_assert_same('0.1.0d', $manifest['version'] ?? null, 'Canonical release must be 0.1.0d.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.8t-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host ownership snapshot/purge baseline.');
@@ -22,8 +22,8 @@ module_assert_same($expectedOwnedTables, $manifest['ownership']['tables'] ?? nul
 module_assert_same($expectedOwnedTables, $manifest['cleanup']['safe_to_delete_tables'] ?? null, 'Cleanup table list must mirror owned_tables.');
 module_assert_same($manifest['permissions'], $manifest['ownership']['permission_keys'] ?? null, 'Ownership must use canonical permission_keys.');
 module_assert_same([], $manifest['ownership']['settings_keys'] ?? null, 'Ownership must use canonical settings_keys.');
-module_assert(! array_key_exists('permissions', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0c manifests.');
-module_assert(! array_key_exists('settings', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0c manifests.');
+module_assert(! array_key_exists('permissions', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0d manifests.');
+module_assert(! array_key_exists('settings', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0d manifests.');
 module_assert_same(['modules/module_cleaner'], $manifest['ownership']['storage_paths'] ?? null, 'Cleaner must declare one module-owned storage root.');
 module_assert_same('quarantine', $manifest['cleanup']['default_mode'] ?? null, 'Cleanup default mode must be canonical quarantine.');
 module_assert(($manifest['cleanup']['requires_backup'] ?? false) === true, 'Cleanup must require backup.');
@@ -78,6 +78,7 @@ module_assert(str_contains($inventorySource, 'ownership_snapshot'), 'Cleaner inv
 module_assert(str_contains($inventorySource, "'protected' => \$protected"), 'Cleaner inventory must expose protected rows to the UI.');
 module_assert(str_contains($inventorySource, 'packageInventory'), 'Cleaner inventory must include package residue details.');
 module_assert(str_contains($inventorySource, 'moduleFileInventory'), 'Cleaner inventory must include module file details.');
+module_assert(str_contains($inventorySource, "Schema::hasColumn('addon_module_packages', 'module_key')"), 'Cleaner package inventory must be schema-aware for module_key.');
 module_assert(! str_contains($inventorySource, 'Schema::drop'), 'Inventory must never drop tables.');
 
 $auditSource = (string) file_get_contents($root.'/module/src/Support/CleanerAuditLogger.php');
@@ -93,6 +94,15 @@ foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_f
 }
 
 $viewSource = (string) file_get_contents($root.'/module/resources/views/admin/index.blade.php');
+module_assert(str_contains($viewSource, '<x-layouts.app-shell'), 'Cleaner UI must use the host app shell.');
+module_assert(! str_contains($viewSource, '<x-app-layout'), 'Cleaner UI must not use the missing x-app-layout component.');
+module_assert(str_contains($viewSource, '<x-card'), 'Cleaner UI must use host cards.');
+module_assert(str_contains($viewSource, '<x-button'), 'Cleaner UI must use host buttons.');
+module_assert(str_contains($viewSource, 'data-table-wrap'), 'Cleaner UI must use the host table wrapper.');
+module_assert(str_contains($viewSource, 'data-table is-mobile-card-table'), 'Cleaner UI must use the host mobile-card table class.');
+module_assert(str_contains($viewSource, 'pill-list'), 'Cleaner UI must use host token-backed pill layout.');
+module_assert(! str_contains($viewSource, 'responsive-data-grid'), 'Cleaner UI must not use module-private responsive grid classes.');
+module_assert(! str_contains($viewSource, 'responsive-definition-list'), 'Cleaner UI must not use module-private definition-list classes.');
 module_assert(str_contains($viewSource, 'v1 ownership snapshot'), 'Cleaner UI must use v1 ownership snapshot wording.');
 module_assert(str_contains($viewSource, 'module_cleaner.purge permission is reserved'), 'Cleaner UI must explain reserved purge permission.');
 module_assert(str_contains($viewSource, "\$entry['protected']"), 'Cleaner UI must disable plans for protected modules.');

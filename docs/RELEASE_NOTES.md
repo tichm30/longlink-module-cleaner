@@ -1,5 +1,14 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0d-CX
+
+- Fixed the `/admin/module-cleaner` 500 by replacing the missing `x-app-layout` wrapper with the host `x-layouts.app-shell` component.
+- Reworked the cleaner admin surface to use host cards, data tables, pills, empty states, form actions, and token-backed buttons.
+- Hardened package residue inventory so hosts without an `addon_module_packages.module_key` column do not trigger a cleanup screen failure.
+- Added regression coverage for the host shell and shared UI primitive contract.
+
+Host minimum: `0.7.8t-CX`.
+
 ## 0.1.0c-CX
 
 - Added protected-module handling for first-party and safety-critical modules, with dry-run planning disabled before host purge primitives are called.
