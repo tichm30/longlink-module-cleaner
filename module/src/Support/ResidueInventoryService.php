@@ -207,13 +207,13 @@ class ResidueInventoryService
                     $query->orWhere('module_key', $module->key);
                 }
             })
-            ->selectRaw('storage_path, COUNT(*) as rows, COALESCE(SUM(file_size_bytes), 0) as bytes')
+            ->selectRaw('storage_path, COUNT(*) as package_rows, COALESCE(SUM(file_size_bytes), 0) as package_bytes')
             ->groupBy('storage_path')
             ->get()
             ->map(fn (object $row): array => [
                 'storage_path' => (string) ($row->storage_path ?? ''),
-                'rows' => (int) ($row->rows ?? 0),
-                'bytes' => (int) ($row->bytes ?? 0),
+                'rows' => (int) ($row->package_rows ?? 0),
+                'bytes' => (int) ($row->package_bytes ?? 0),
             ])
             ->all();
     }

@@ -8,7 +8,7 @@ $root = module_repo_root();
 $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
-module_assert_same('0.1.0d', $manifest['version'] ?? null, 'Canonical release must be 0.1.0d.');
+module_assert_same('0.1.0e', $manifest['version'] ?? null, 'Canonical release must be 0.1.0e.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.8t-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host ownership snapshot/purge baseline.');
@@ -79,6 +79,10 @@ module_assert(str_contains($inventorySource, "'protected' => \$protected"), 'Cle
 module_assert(str_contains($inventorySource, 'packageInventory'), 'Cleaner inventory must include package residue details.');
 module_assert(str_contains($inventorySource, 'moduleFileInventory'), 'Cleaner inventory must include module file details.');
 module_assert(str_contains($inventorySource, "Schema::hasColumn('addon_module_packages', 'module_key')"), 'Cleaner package inventory must be schema-aware for module_key.');
+module_assert(str_contains($inventorySource, 'package_rows'), 'Cleaner package inventory must use a MariaDB-safe package_rows alias.');
+module_assert(str_contains($inventorySource, 'package_bytes'), 'Cleaner package inventory must use a MariaDB-safe package_bytes alias.');
+module_assert(! str_contains($inventorySource, 'COUNT(*) as rows'), 'Cleaner package inventory must not use MariaDB reserved alias rows.');
+module_assert(! str_contains($inventorySource, 'SUM(file_size_bytes), 0) as bytes'), 'Cleaner package inventory must not use reserved/ambiguous alias bytes.');
 module_assert(! str_contains($inventorySource, 'Schema::drop'), 'Inventory must never drop tables.');
 
 $auditSource = (string) file_get_contents($root.'/module/src/Support/CleanerAuditLogger.php');

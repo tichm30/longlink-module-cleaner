@@ -1,5 +1,13 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0e-CX
+
+- Fixed the live MariaDB/MySQL 500 on `/admin/module-cleaner` by renaming package inventory SQL aliases from reserved/ambiguous `rows` and `bytes` to `package_rows` and `package_bytes`.
+- Preserved the existing UI output keys, so the dashboard still renders package residue as `rows` and `bytes`.
+- Added regression coverage to prevent the reserved SQL aliases returning.
+
+Host minimum: `0.7.8t-CX`.
+
 ## 0.1.0d-CX
 
 - Fixed the `/admin/module-cleaner` 500 by replacing the missing `x-app-layout` wrapper with the host `x-layouts.app-shell` component.

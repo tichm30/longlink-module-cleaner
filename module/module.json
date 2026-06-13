@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0d",
+    "version": "0.1.0e",
     "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -63,6 +63,7 @@
     },
     "requires_host_min_version": "0.7.8t-CX",
     "notes": [
+        "0.1.0e renames package inventory SQL aliases away from MariaDB reserved words to prevent the admin dashboard 500 on MySQL/MariaDB hosts.",
         "0.1.0d fixes the admin cleaner route shell to use the host app-shell component and shared token-backed UI primitives.",
         "Populate release. This module inventories ownership snapshots and creates dry-run cleanup plans through the host AddonModuleRegistry only.",
         "Owned data is restricted to module_cleaner_* tables and module-owned storage. Core settings, permissions, navigation rows, and provider registry definitions self-clean through host registries.",
