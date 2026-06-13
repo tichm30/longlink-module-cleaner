@@ -5,6 +5,7 @@ namespace Modules\ModuleCleaner\Http\Controllers;
 use App\Models\AddonModule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Modules\ModuleCleaner\Support\CleanupPlanService;
 use Modules\ModuleCleaner\Support\ResidueInventoryService;
@@ -21,7 +22,13 @@ class ModuleCleanerController
 
     public function plan(Request $request, AddonModule $module, CleanupPlanService $plans): RedirectResponse
     {
-        $plan = $plans->dryRun($module, $request->user());
+        try {
+            $plan = $plans->dryRun($module, $request->user());
+        } catch (ValidationException $exception) {
+            return redirect()
+                ->route('admin.module-cleaner.index')
+                ->withErrors($exception->errors());
+        }
 
         return redirect()
             ->route('admin.module-cleaner.index')

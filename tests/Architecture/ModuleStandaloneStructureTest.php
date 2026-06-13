@@ -8,7 +8,7 @@ $root = module_repo_root();
 $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
-module_assert_same('0.1.0b', $manifest['version'] ?? null, 'Populate release must be 0.1.0b.');
+module_assert_same('0.1.0c', $manifest['version'] ?? null, 'Canonical release must be 0.1.0c.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.8t-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host ownership snapshot/purge baseline.');
@@ -20,7 +20,12 @@ $expectedOwnedTables = [
 module_assert_same($expectedOwnedTables, $manifest['owned_tables'] ?? null, 'Owned-table boundary must include only module_cleaner-prefixed tables.');
 module_assert_same($expectedOwnedTables, $manifest['ownership']['tables'] ?? null, 'Ownership block must mirror flat owned_tables.');
 module_assert_same($expectedOwnedTables, $manifest['cleanup']['safe_to_delete_tables'] ?? null, 'Cleanup table list must mirror owned_tables.');
+module_assert_same($manifest['permissions'], $manifest['ownership']['permission_keys'] ?? null, 'Ownership must use canonical permission_keys.');
+module_assert_same([], $manifest['ownership']['settings_keys'] ?? null, 'Ownership must use canonical settings_keys.');
+module_assert(! array_key_exists('permissions', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0c manifests.');
+module_assert(! array_key_exists('settings', $manifest['ownership'] ?? []), 'Ownership aliases must not be emitted in 0.1.0c manifests.');
 module_assert_same(['modules/module_cleaner'], $manifest['ownership']['storage_paths'] ?? null, 'Cleaner must declare one module-owned storage root.');
+module_assert_same('quarantine', $manifest['cleanup']['default_mode'] ?? null, 'Cleanup default mode must be canonical quarantine.');
 module_assert(($manifest['cleanup']['requires_backup'] ?? false) === true, 'Cleanup must require backup.');
 module_assert(($manifest['cleanup']['requires_step_up_mfa'] ?? false) === true, 'Cleanup must require step-up MFA.');
 
@@ -61,16 +66,37 @@ module_assert(str_contains($providerSource, "! Route::has('admin.module-cleaner.
 $planSource = (string) file_get_contents($root.'/module/src/Support/CleanupPlanService.php');
 module_assert(str_contains($planSource, 'AddonModuleRegistry'), 'Cleaner must orchestrate through the host registry.');
 module_assert(str_contains($planSource, 'purgeModuleResidue'), 'Cleaner dry-runs must use the host purge primitive.');
+module_assert(str_contains($planSource, "'dry_run' => true"), 'Cleaner planning must call host purge with dry_run=true.');
+module_assert(str_contains($planSource, 'PROTECTED_MODULE_KEYS'), 'Cleaner planning must protect first-party, generator, and cleaner keys.');
+module_assert(str_contains($planSource, 'module_generator'), 'Cleaner must protect the Module Generator from planning.');
+module_assert(str_contains($planSource, 'module_cleaner'), 'Cleaner must protect itself from planning.');
 module_assert(! str_contains($planSource, 'Schema::drop'), 'Cleaner must not drop tables directly.');
 module_assert(! str_contains($planSource, 'deleteDirectory'), 'Cleaner must not delete directories directly.');
 
 $inventorySource = (string) file_get_contents($root.'/module/src/Support/ResidueInventoryService.php');
 module_assert(str_contains($inventorySource, 'ownership_snapshot'), 'Cleaner inventory must be snapshot-first.');
+module_assert(str_contains($inventorySource, "'protected' => \$protected"), 'Cleaner inventory must expose protected rows to the UI.');
+module_assert(str_contains($inventorySource, 'packageInventory'), 'Cleaner inventory must include package residue details.');
+module_assert(str_contains($inventorySource, 'moduleFileInventory'), 'Cleaner inventory must include module file details.');
 module_assert(! str_contains($inventorySource, 'Schema::drop'), 'Inventory must never drop tables.');
+
+$auditSource = (string) file_get_contents($root.'/module/src/Support/CleanerAuditLogger.php');
+foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_files_planned'] as $column) {
+    module_assert(str_contains($auditSource, $column), 'Audit logger must write '.$column.'.');
+}
 
 $migrationSource = (string) file_get_contents($root.'/module/database/migrations/2026_06_13_020000_create_module_cleaner_cleanup_logs_table.php');
 module_assert(! str_contains($migrationSource, '->constrained('), 'Cleaner migrations must not hard-link to host tables.');
 module_assert(! str_contains($migrationSource, "Schema::table('users'"), 'Cleaner migrations must never touch users.');
+foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_files_planned'] as $column) {
+    module_assert(str_contains($migrationSource, $column), 'Cleanup log migration must include '.$column.'.');
+}
+
+$viewSource = (string) file_get_contents($root.'/module/resources/views/admin/index.blade.php');
+module_assert(str_contains($viewSource, 'v1 ownership snapshot'), 'Cleaner UI must use v1 ownership snapshot wording.');
+module_assert(str_contains($viewSource, 'module_cleaner.purge permission is reserved'), 'Cleaner UI must explain reserved purge permission.');
+module_assert(str_contains($viewSource, "\$entry['protected']"), 'Cleaner UI must disable plans for protected modules.');
+module_assert(str_contains($viewSource, 'Residue Details'), 'Cleaner UI must expose expanded residue details.');
 
 foreach (module_files($root.'/module/src') as $phpFile) {
     if (pathinfo($phpFile, PATHINFO_EXTENSION) !== 'php') {

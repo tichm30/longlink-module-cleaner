@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0b",
+    "version": "0.1.0c",
     "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -41,18 +41,18 @@
         "tables": [
             "module_cleaner_cleanup_logs"
         ],
-        "permissions": [
+        "permission_keys": [
             "module_cleaner.view",
             "module_cleaner.plan",
             "module_cleaner.purge"
         ],
-        "settings": [],
+        "settings_keys": [],
         "storage_paths": [
             "modules/module_cleaner"
         ]
     },
     "cleanup": {
-        "default_mode": "backup_then_delete",
+        "default_mode": "quarantine",
         "requires_backup": true,
         "requires_step_up_mfa": true,
         "allow_hard_delete": false,

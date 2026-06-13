@@ -19,6 +19,10 @@ return new class extends Migration
             $table->json('files_planned')->nullable();
             $table->json('settings_planned')->nullable();
             $table->json('permissions_planned')->nullable();
+            $table->json('navigation_planned')->nullable();
+            $table->json('storage_planned')->nullable();
+            $table->json('packages_planned')->nullable();
+            $table->json('module_files_planned')->nullable();
             $table->unsignedBigInteger('size_freed_bytes')->default(0);
             $table->string('backup_ref')->nullable();
             $table->json('details')->nullable();
