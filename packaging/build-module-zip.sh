@@ -34,7 +34,7 @@ cp -R module/. "$ZIP_ROOT/"
 # Hygiene exclusions (mirrors the host's release builder)
 (
     cd "$BUILD_ROOT"
-    zip -qr "$ROOT/releases/${ZIP_NAME}" module_cleaner/ \
+    COPYFILE_DISABLE=1 zip -X -qr "$ROOT/releases/${ZIP_NAME}" module_cleaner/ \
     -x "*/.DS_Store" \
     -x ".DS_Store" \
     -x "*/__MACOSX/*" \
@@ -46,6 +46,8 @@ cp -R module/. "$ZIP_ROOT/"
 )
 
 rm -rf "$BUILD_ROOT"
+
+bash "$ROOT/packaging/verify-zip-hygiene.sh" "releases/${ZIP_NAME}"
 
 # SHA-256 sidecar
 ( cd releases && shasum -a 256 "$ZIP_NAME" > "${ZIP_NAME}.sha256" )

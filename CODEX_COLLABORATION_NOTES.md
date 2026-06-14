@@ -57,12 +57,14 @@ don't have to rediscover it from scratch each session.
 3. Update version-tracking docs in `docs/`.
 4. Run `packaging/build-module-zip.sh` (produces `releases/longlink-module-cleaner-<ver>.zip` + SHA-256 sidecar).
 5. Copy the zip + checksum into `handovers/<ver>-<owner>/`, write the UPDATE_LOG + HANDOVER.
-6. `git add -A && git commit -m "CX <ver>: ..."` and `git push -u origin claude/funny-hawking-module-cleaner`.
-7. Archive older binary zips to Drive per §4 three-zip rule.
+6. If an optional wrapper zip is needed for a whole handover folder, build it only with `bash packaging/build-handover-wrapper.sh handovers/<ver>-<owner>`; do not use Finder Compress or ad hoc `zip -r`, because those can add `__MACOSX` AppleDouble entries.
+7. `git add -A && git commit -m "CX <ver>: ..."` and `git push -u origin claude/funny-hawking-module-cleaner`.
+8. Archive older binary zips to Drive per §4 three-zip rule.
 
 ## 6. Standing rules
 
 - No keys / `.env` / live sessions / logs / uploads / nested zips / macOS artefacts in the release zip.
+- All release and wrapper zips must pass `bash packaging/verify-zip-hygiene.sh <zip>` before handover.
 - The module manifest's declared `owned_tables` is authoritative for the disable/purge boundary. Keep it accurate; every table this module owns is prefixed `module_cleaner_`.
 - Module migrations target only module-owned prefixed tables (per the host's addon-DB safety boundary, `assertAddonOwnedTable`).
 - **Destructive operations go through host purge primitives only** (manifest-driven, forbidden-tables-guarded, super-admin-gated). The cleaner never issues raw `DROP TABLE`/`File::deleteDirectory` against surfaces it does not own; it orchestrates host-sanctioned removals. Host primitives land in the host repo FIRST; this module pins `requires_host_min_version` to them.
