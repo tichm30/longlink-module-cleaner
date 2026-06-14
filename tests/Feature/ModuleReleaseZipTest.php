@@ -35,6 +35,15 @@ foreach ([
     'module_cleaner/src/ModuleCleanerModuleProvider.php',
     'module_cleaner/routes/web.php',
     'module_cleaner/resources/views/admin/index.blade.php',
+    'module_cleaner/resources/views/admin/registry.blade.php',
+    'module_cleaner/resources/views/admin/details.blade.php',
+    'module_cleaner/resources/views/admin/plan.blade.php',
+    'module_cleaner/resources/views/admin/orphans.blade.php',
+    'module_cleaner/resources/views/admin/backups.blade.php',
+    'module_cleaner/resources/views/admin/quarantine.blade.php',
+    'module_cleaner/resources/views/admin/logs.blade.php',
+    'module_cleaner/resources/views/admin/settings.blade.php',
+    'module_cleaner/resources/views/admin/partials/section-nav.blade.php',
 ] as $requiredEntry) {
     module_assert(in_array($requiredEntry, $names, true), 'Zip missing '.$requiredEntry);
 }

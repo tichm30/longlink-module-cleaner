@@ -7,10 +7,13 @@ require_once dirname(__DIR__).'/TestSupport.php';
 $root = module_repo_root();
 $planSource = (string) file_get_contents($root.'/module/src/Support/CleanupPlanService.php');
 $inventorySource = (string) file_get_contents($root.'/module/src/Support/ResidueInventoryService.php');
-$viewSource = (string) file_get_contents($root.'/module/resources/views/admin/index.blade.php');
+$viewSource = '';
+foreach (module_files($root.'/module/resources/views/admin') as $viewFile) {
+    $viewSource .= (string) file_get_contents($viewFile)."\n";
+}
 
 foreach ([
-    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0d.',
+    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0f.',
     "'surfaces' => ['tables', 'settings', 'permissions', 'navigation', 'storage', 'packages', 'module_files']" => 'Cleaner must pass every recognised residue surface to the host primitive.',
     'Protected module - cleanup planning disabled.' => 'Protected modules must fail closed server-side.',
     'module_generator' => 'Module Generator must be in the protected planning set.',
@@ -36,7 +39,10 @@ foreach ([
     'protected_reason' => 'UI must show the protected-module reason.',
     'No v1 ownership snapshot is available for this module.' => 'UI must explain no-snapshot modules.',
     ':disabled="! $entry[\'has_snapshot\'] || $entry[\'protected\']"' => 'UI must disable dry-run for protected/no-snapshot modules.',
-    'Residue Details' => 'UI must provide per-module detail expansion.',
+    'module_cleaner.purge' => 'UI must explain the reserved purge permission boundary.',
+    'details.tables' => 'UI must provide per-module residue table details.',
+    'details.storage' => 'UI must provide per-module storage residue details.',
+    'details.packages' => 'UI must provide per-module package residue details.',
 ] as $needle => $message) {
     module_assert(str_contains($viewSource, $needle), $message);
 }

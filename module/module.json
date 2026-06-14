@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0e",
+    "version": "0.1.0f",
     "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -29,13 +29,58 @@
             "name": "admin.module-cleaner.index"
         },
         {
+            "method": "GET",
+            "path": "/admin/module-cleaner/registry",
+            "name": "admin.module-cleaner.registry"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/modules/{module}",
+            "name": "admin.module-cleaner.modules.show"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/modules/{module}/plan",
+            "name": "admin.module-cleaner.modules.plan.show"
+        },
+        {
             "method": "POST",
             "path": "/admin/module-cleaner/modules/{module}/plan",
             "name": "admin.module-cleaner.modules.plan"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/orphans",
+            "name": "admin.module-cleaner.orphans"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/backups",
+            "name": "admin.module-cleaner.backups"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/quarantine",
+            "name": "admin.module-cleaner.quarantine"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/logs",
+            "name": "admin.module-cleaner.logs"
+        },
+        {
+            "method": "GET",
+            "path": "/admin/module-cleaner/settings",
+            "name": "admin.module-cleaner.settings"
+        },
+        {
+            "method": "POST",
+            "path": "/admin/module-cleaner/settings",
+            "name": "admin.module-cleaner.settings.update"
         }
     ],
     "menus": [
-        "settings.module_cleaner"
+        "platform_tools.module_cleaner"
     ],
     "ownership": {
         "tables": [
@@ -61,8 +106,10 @@
             "module_cleaner_cleanup_logs"
         ]
     },
-    "requires_host_min_version": "0.7.8t-CX",
+    "requires_host_min_version": "0.7.9b-CX",
     "notes": [
+        "0.1.0f exposes Cleaner as a Platform Tools console with dashboard, registry, module details, dry-run plans, orphan tables, backups, quarantine, logs, and settings views.",
+        "0.1.0f keeps purge execution dry-run/host-primitive only while surfacing the full cleanup workflow structure for review and future gated execution.",
         "0.1.0e renames package inventory SQL aliases away from MariaDB reserved words to prevent the admin dashboard 500 on MySQL/MariaDB hosts.",
         "0.1.0d fixes the admin cleaner route shell to use the host app-shell component and shared token-backed UI primitives.",
         "Populate release. This module inventories ownership snapshots and creates dry-run cleanup plans through the host AddonModuleRegistry only.",

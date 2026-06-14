@@ -27,15 +27,15 @@ class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider
         return [
             MenuRegistry::addonRoute(
                 'module_cleaner',
-                'settings.module_cleaner',
+                'platform_tools.module_cleaner',
                 'module_cleaner::messages.navigation.cleaner',
                 'admin.module-cleaner.index',
-                'eraser',
+                'broom',
                 'module_cleaner.view',
                 ['admin.module-cleaner.*'],
-                'settings',
+                'platform_tools',
                 '',
-                250,
+                30,
             ),
         ];
     }
