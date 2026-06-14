@@ -5,6 +5,7 @@ namespace Modules\ModuleCleaner;
 use App\Support\Modules\AbstractModuleRuntimeProvider;
 use App\Support\Navigation\MenuRegistry;
 use Illuminate\Support\Facades\Route;
+use Modules\ModuleCleaner\Settings\ModuleCleanerSettingsCatalog;
 
 class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider
 {
@@ -38,6 +39,11 @@ class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider
                 30,
             ),
         ];
+    }
+
+    public function settings(): array
+    {
+        return app(ModuleCleanerSettingsCatalog::class)->definitions();
     }
 
     public function registerRoutes(): void

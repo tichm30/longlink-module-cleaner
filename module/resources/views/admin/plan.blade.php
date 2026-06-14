@@ -5,6 +5,9 @@
         @if (session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
 
         @php($module = $entry['module'])
 
@@ -60,6 +63,49 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                <div class="form-grid two">
+                    <div class="settings-control-card">
+                        <h3>{{ __('module_cleaner::messages.plan.backup_title') }}</h3>
+                        <p class="form-help">{{ __('module_cleaner::messages.plan.backup_body') }}</p>
+                        @if ($backup)
+                            <div class="pill-list">
+                                <span class="pill success">{{ __('module_cleaner::messages.plan.backup_confirmed') }}</span>
+                                <span class="pill info">{{ $backup['relative_path'] ?? '' }}</span>
+                            </div>
+                        @else
+                            <form method="POST" action="{{ route('admin.module-cleaner.modules.backup', $module) }}">
+                                @csrf
+                                <x-button type="submit" icon="database-backup">
+                                    {{ __('module_cleaner::messages.plan.create_backup') }}
+                                </x-button>
+                            </form>
+                        @endif
+                    </div>
+
+                    <div class="settings-control-card">
+                        <h3>{{ __('module_cleaner::messages.plan.execute_title') }}</h3>
+                        <p class="form-help">{{ __('module_cleaner::messages.plan.execute_body') }}</p>
+                        @if ($backup && $execution)
+                            <form method="POST" action="{{ route('admin.settings.addon-modules.modules.purge', $module) }}">
+                                @csrf
+                                <input type="hidden" name="backup_confirmed" value="1">
+                                @foreach (($execution['surfaces'] ?? []) as $surface)
+                                    <input type="hidden" name="surfaces[]" value="{{ $surface }}">
+                                @endforeach
+                                <label class="field">
+                                    <span>{{ __('module_cleaner::messages.plan.confirm_module_key') }}</span>
+                                    <input type="text" name="confirm_module_key" value="" placeholder="{{ $execution['confirm_module_key'] ?? $module->key }}" required>
+                                </label>
+                                <x-button type="submit" variant="danger" icon="trash">
+                                    {{ __('module_cleaner::messages.plan.execute_host_purge') }}
+                                </x-button>
+                            </form>
+                        @else
+                            <x-empty-state :description="__('module_cleaner::messages.plan.backup_required')" />
+                        @endif
+                    </div>
                 </div>
             @endif
         </x-card>

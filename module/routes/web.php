@@ -27,6 +27,10 @@ Route::middleware(['web', 'auth'])
             ->middleware('can:module_cleaner.plan')
             ->name('modules.plan');
 
+        Route::post('/modules/{module}/backup', [ModuleCleanerController::class, 'backup'])
+            ->middleware('can:module_cleaner.purge')
+            ->name('modules.backup');
+
         Route::get('/orphans', [ModuleCleanerController::class, 'orphans'])
             ->middleware('can:module_cleaner.view')
             ->name('orphans');

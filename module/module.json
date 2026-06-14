@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0g",
+    "version": "0.1.0h",
     "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -49,6 +49,11 @@
             "name": "admin.module-cleaner.modules.plan"
         },
         {
+            "method": "POST",
+            "path": "/admin/module-cleaner/modules/{module}/backup",
+            "name": "admin.module-cleaner.modules.backup"
+        },
+        {
             "method": "GET",
             "path": "/admin/module-cleaner/orphans",
             "name": "admin.module-cleaner.orphans"
@@ -82,6 +87,18 @@
     "menus": [
         "platform_tools.module_cleaner"
     ],
+    "settings": [
+        "module_cleaner.require_backup",
+        "module_cleaner.require_typed_confirmation",
+        "module_cleaner.allow_dry_run",
+        "module_cleaner.block_dependents",
+        "module_cleaner.enable_orphan_detection",
+        "module_cleaner.backup_retention_days",
+        "module_cleaner.log_retention_days",
+        "module_cleaner.quarantine_retention_days",
+        "module_cleaner.email_on_cleanup",
+        "module_cleaner.slack_webhook_url"
+    ],
     "ownership": {
         "tables": [
             "module_cleaner_cleanup_logs"
@@ -91,9 +108,22 @@
             "module_cleaner.plan",
             "module_cleaner.purge"
         ],
-        "settings_keys": [],
+        "settings_keys": [
+            "module_cleaner.require_backup",
+            "module_cleaner.require_typed_confirmation",
+            "module_cleaner.allow_dry_run",
+            "module_cleaner.block_dependents",
+            "module_cleaner.enable_orphan_detection",
+            "module_cleaner.backup_retention_days",
+            "module_cleaner.log_retention_days",
+            "module_cleaner.quarantine_retention_days",
+            "module_cleaner.email_on_cleanup",
+            "module_cleaner.slack_webhook_url"
+        ],
         "storage_paths": [
-            "modules/module_cleaner"
+            "modules/module_cleaner",
+            "module_cleaner/backups",
+            "module_cleaner/quarantine"
         ]
     },
     "cleanup": {
@@ -108,6 +138,7 @@
     },
     "requires_host_min_version": "0.7.9d-CX",
     "notes": [
+        "0.1.0h restores WorkSuite-parity P0 foundations: persisted Cleaner settings, per-module backup evidence sets, review-only orphan table detection, and backup-confirmed host purge handoff.",
         "0.1.0g replaces the Cleaner console button strip with host responsive category links and mobile Categories Menu behaviour.",
         "0.1.0f exposes Cleaner as a Platform Tools console with dashboard, registry, module details, dry-run plans, orphan tables, backups, quarantine, logs, and settings views.",
         "0.1.0f keeps purge execution dry-run/host-primitive only while surfacing the full cleanup workflow structure for review and future gated execution.",

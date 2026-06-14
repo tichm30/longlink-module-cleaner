@@ -15,16 +15,18 @@
                         <thead>
                             <tr>
                                 <th>{{ __('module_cleaner::messages.common.name') }}</th>
-                                <th>{{ __('module_cleaner::messages.logs.size') }}</th>
-                                <th>{{ __('module_cleaner::messages.plan.action') }}</th>
+                                <th>{{ __('module_cleaner::messages.orphans.rows') }}</th>
+                                <th>{{ __('module_cleaner::messages.orphans.confidence') }}</th>
+                                <th>{{ __('module_cleaner::messages.orphans.evidence') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($candidates as $candidate)
                                 <tr>
                                     <td data-label="{{ __('module_cleaner::messages.common.name') }}"><code>{{ $candidate['name'] ?? '' }}</code></td>
-                                    <td data-label="{{ __('module_cleaner::messages.logs.size') }}">{{ $candidate['size'] ?? 'Unknown' }}</td>
-                                    <td data-label="{{ __('module_cleaner::messages.plan.action') }}"><span class="pill warning">Review only</span></td>
+                                    <td data-label="{{ __('module_cleaner::messages.orphans.rows') }}">{{ $candidate['rows'] ?? 'Unknown' }}</td>
+                                    <td data-label="{{ __('module_cleaner::messages.orphans.confidence') }}"><span class="pill warning">{{ $candidate['confidence'] ?? 'review' }}</span></td>
+                                    <td data-label="{{ __('module_cleaner::messages.orphans.evidence') }}">{{ implode(', ', $candidate['evidence'] ?? []) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

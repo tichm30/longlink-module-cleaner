@@ -11,7 +11,8 @@
 
             <div class="form-grid two">
                 <x-card :title="__('module_cleaner::messages.settings.safety')">
-                    <p class="form-help">module_cleaner.purge is reserved for future destructive execution controls; this release exposes dry-run planning and settings only.</p>
+                    <p class="form-help">{{ __('module_cleaner::messages.plan.guard') }}</p>
+                    <p class="form-help">module_cleaner.purge is required for backup creation and host purge handoff.</p>
                     <div class="form-stack">
                         <label class="choice-row">
                             <input type="checkbox" name="require_backup" value="1" @checked($defaults['require_backup'])>
@@ -60,12 +61,13 @@
             <x-card :title="__('module_cleaner::messages.settings.notifications')">
                 <div class="form-grid two">
                     <label class="choice-row">
-                        <input type="checkbox" name="email_on_cleanup" value="1">
+                        <input type="checkbox" name="email_on_cleanup" value="1" @checked($defaults['email_on_cleanup'])>
                         <span>{{ __('module_cleaner::messages.settings.email_on_cleanup') }}</span>
                     </label>
                     <label class="field">
                         <span>{{ __('module_cleaner::messages.settings.slack_webhook') }}</span>
-                        <input type="url" name="slack_webhook_url" value="{{ old('slack_webhook_url') }}" placeholder="https://hooks.slack.com/services/...">
+                        <input type="url" name="slack_webhook_url" value="{{ old('slack_webhook_url', $defaults['slack_webhook_url']) }}" placeholder="https://hooks.slack.com/services/...">
+                        @error('slack_webhook_url')<span class="form-error">{{ $message }}</span>@enderror
                     </label>
                 </div>
             </x-card>

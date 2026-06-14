@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use App\Support\Settings\SettingsStore;
+use Modules\ModuleCleaner\Settings\ModuleCleanerSettingsCatalog;
 use Modules\ModuleCleaner\Support\CleanupPlanService;
+use Modules\ModuleCleaner\Support\OrphanTableDetector;
 use Modules\ModuleCleaner\Support\ResidueInventoryService;
 
 class ModuleCleanerController extends Controller
@@ -43,11 +46,15 @@ class ModuleCleanerController extends Controller
         ]);
     }
 
-    public function planPreview(AddonModule $module, ResidueInventoryService $inventory): View
+    public function planPreview(AddonModule $module, ResidueInventoryService $inventory, CleanupPlanService $plans): View
     {
+        $plan = session('module_cleaner_plan');
+
         return view('module_cleaner::admin.plan', $this->viewData('plan') + [
             'entry' => $inventory->inventoryFor($module),
-            'plan' => session('module_cleaner_plan'),
+            'plan' => $plan,
+            'backup' => session('module_cleaner_backup'),
+            'execution' => is_array($plan) ? $plans->executionPayload($module, $plan['surfaces'] ?? null) : null,
         ]);
     }
 
@@ -67,11 +74,29 @@ class ModuleCleanerController extends Controller
             ->with('module_cleaner_plan', $plan);
     }
 
-    public function orphans(): View
+    public function backup(Request $request, AddonModule $module, CleanupPlanService $plans): RedirectResponse
     {
+        try {
+            $backup = $plans->backup($module, $request->user());
+        } catch (ValidationException $exception) {
+            return redirect()
+                ->route('admin.module-cleaner.modules.plan.show', $module)
+                ->withErrors($exception->errors());
+        }
+
+        return redirect()
+            ->route('admin.module-cleaner.modules.plan.show', $module)
+            ->with('status', __('module_cleaner::messages.messages.backup_ready', ['module' => $module->name]))
+            ->with('module_cleaner_backup', $backup);
+    }
+
+    public function orphans(OrphanTableDetector $detector, SettingsStore $settings): View
+    {
+        $enabled = (bool) $settings->get('module_cleaner.enable_orphan_detection');
+
         return view('module_cleaner::admin.orphans', $this->viewData('orphans') + [
-            'candidates' => [],
-            'detectionEnabled' => false,
+            'candidates' => $enabled ? $detector->candidates() : [],
+            'detectionEnabled' => $enabled,
         ]);
     }
 
@@ -98,28 +123,33 @@ class ModuleCleanerController extends Controller
         ]);
     }
 
-    public function settings(): View
+    public function settings(SettingsStore $settings, ModuleCleanerSettingsCatalog $catalog): View
     {
         return view('module_cleaner::admin.settings', $this->viewData('settings') + [
-            'defaults' => [
-                'require_backup' => true,
-                'require_typed_confirmation' => true,
-                'allow_dry_run' => true,
-                'block_dependents' => true,
-                'enable_orphan_detection' => false,
-                'backup_retention_days' => 30,
-                'log_retention_days' => 90,
-                'quarantine_retention_days' => 14,
-            ],
+            'defaults' => $this->settingsValues($settings, $catalog),
         ]);
     }
 
-    public function updateSettings(Request $request): RedirectResponse
+    public function updateSettings(Request $request, SettingsStore $settings): RedirectResponse
     {
         $request->validate([
             'backup_retention_days' => ['nullable', 'integer', 'min:0', 'max:3650'],
             'log_retention_days' => ['nullable', 'integer', 'min:0', 'max:3650'],
             'quarantine_retention_days' => ['nullable', 'integer', 'min:0', 'max:3650'],
+            'slack_webhook_url' => ['nullable', 'url', 'max:255'],
+        ]);
+
+        $settings->updateMany([
+            'module_cleaner.require_backup' => $request->boolean('require_backup'),
+            'module_cleaner.require_typed_confirmation' => $request->boolean('require_typed_confirmation'),
+            'module_cleaner.allow_dry_run' => $request->boolean('allow_dry_run'),
+            'module_cleaner.block_dependents' => $request->boolean('block_dependents'),
+            'module_cleaner.enable_orphan_detection' => $request->boolean('enable_orphan_detection'),
+            'module_cleaner.backup_retention_days' => (string) $request->integer('backup_retention_days', 30),
+            'module_cleaner.log_retention_days' => (string) $request->integer('log_retention_days', 90),
+            'module_cleaner.quarantine_retention_days' => (string) $request->integer('quarantine_retention_days', 14),
+            'module_cleaner.email_on_cleanup' => $request->boolean('email_on_cleanup'),
+            'module_cleaner.slack_webhook_url' => (string) $request->input('slack_webhook_url', ''),
         ]);
 
         return redirect()
@@ -203,14 +233,40 @@ class ModuleCleanerController extends Controller
             return [];
         }
 
-        return collect(File::files($path))
+        $files = collect(File::files($path))
             ->map(fn (\SplFileInfo $file): array => [
                 'name' => $file->getFilename(),
                 'path' => $file->getPathname(),
                 'size' => $file->getSize(),
                 'modified_at' => date('Y-m-d H:i:s', $file->getMTime()),
-            ])
+            ]);
+
+        $directories = collect(File::directories($path))
+            ->map(fn (string $directory): array => [
+                'name' => basename($directory),
+                'path' => $directory,
+                'size' => collect(File::allFiles($directory))->sum(fn (mixed $file): int => method_exists($file, 'getSize') ? (int) $file->getSize() : 0),
+                'modified_at' => date('Y-m-d H:i:s', filemtime($directory) ?: time()),
+            ]);
+
+        return $directories
+            ->merge($files)
             ->values()
             ->all();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function settingsValues(SettingsStore $settings, ModuleCleanerSettingsCatalog $catalog): array
+    {
+        $values = [];
+
+        foreach (array_keys($catalog->defaults()) as $key) {
+            $shortKey = str_replace('module_cleaner.', '', $key);
+            $values[$shortKey] = $settings->get($key);
+        }
+
+        return $values;
     }
 }

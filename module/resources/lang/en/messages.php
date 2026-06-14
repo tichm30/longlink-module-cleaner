@@ -70,12 +70,24 @@ return [
         'action' => 'Action',
         'target' => 'Target',
         'guard' => 'Purge execution remains gated by backup, typed confirmation, inactive module state, and step-up MFA.',
+        'backup_title' => 'Backup Evidence',
+        'backup_body' => 'Create the required per-module backup set before host purge execution.',
+        'backup_confirmed' => 'Backup confirmed',
+        'create_backup' => 'Create Backup',
+        'execute_title' => 'Host Purge Handoff',
+        'execute_body' => 'Execution posts to the host Addon Modules purge route with backup confirmation and typed module-key confirmation.',
+        'backup_required' => 'Create the backup before executing the host purge handoff.',
+        'confirm_module_key' => 'Type module key to confirm',
+        'execute_host_purge' => 'Execute Host Purge',
     ],
     'orphans' => [
         'title' => 'Orphan Tables',
         'subtitle' => 'Review possible database tables that are not attached to a registered module snapshot.',
         'disabled' => 'Orphan detection is disabled by default for performance. Enable it in Settings when you need a targeted scan.',
         'empty' => 'No orphan table candidates are currently listed.',
+        'rows' => 'Rows',
+        'confidence' => 'Confidence',
+        'evidence' => 'Evidence',
     ],
     'backups' => [
         'title' => 'Backups',
@@ -117,9 +129,52 @@ return [
         'slack_webhook' => 'Slack Webhook URL',
         'save' => 'Save Settings',
         'saved' => 'Module Cleaner settings saved.',
+        'definitions' => [
+            'require_backup' => [
+                'label' => 'Require Backup Before Cleanup',
+                'help' => 'Cleaner must create a backup set before handing off purge execution to the host.',
+            ],
+            'require_typed_confirmation' => [
+                'label' => 'Require Typed Confirmation',
+                'help' => 'Operators must type the module key before host purge execution.',
+            ],
+            'allow_dry_run' => [
+                'label' => 'Allow Dry-Run Plans',
+                'help' => 'Keep dry-run planning available before any cleanup execution.',
+            ],
+            'block_dependents' => [
+                'label' => 'Block Cleanup When Dependents Exist',
+                'help' => 'Prevent cleanup when module dependency evidence indicates another module relies on it.',
+            ],
+            'enable_orphan_detection' => [
+                'label' => 'Enable Orphan Table Detection',
+                'help' => 'Run the review-only orphan table scanner on demand.',
+            ],
+            'backup_retention_days' => [
+                'label' => 'Backup Retention Days',
+                'help' => 'Number of days backup sets should be retained.',
+            ],
+            'log_retention_days' => [
+                'label' => 'Log Retention Days',
+                'help' => 'Number of days Cleaner audit entries should be retained.',
+            ],
+            'quarantine_retention_days' => [
+                'label' => 'Quarantine Retention Days',
+                'help' => 'Number of days quarantine folders should be retained.',
+            ],
+            'email_on_cleanup' => [
+                'label' => 'Email Cleanup Summary',
+                'help' => 'Send a cleanup summary after purge handoff completes.',
+            ],
+            'slack_webhook_url' => [
+                'label' => 'Slack Webhook URL',
+                'help' => 'Optional webhook used for cleanup notifications.',
+            ],
+        ],
     ],
     'messages' => [
         'plan_ready' => 'Dry-run cleanup plan prepared for :module.',
+        'backup_ready' => 'Backup set created for :module.',
     ],
     'common' => [
         'name' => 'Name',
