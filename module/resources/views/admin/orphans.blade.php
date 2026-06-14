@@ -1,5 +1,5 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.orphans.title')" :subtitle="__('module_cleaner::messages.orphans.subtitle')">
-    <div class="settings-layout">
+    <div class="settings-category-layout">
         @include('module_cleaner::admin.partials.section-nav')
 
         <x-card :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">

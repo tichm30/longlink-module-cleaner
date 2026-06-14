@@ -13,7 +13,7 @@ foreach (module_files($root.'/module/resources/views/admin') as $viewFile) {
 }
 
 foreach ([
-    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0f.',
+    "'dry_run' => true" => 'Cleaner must only request dry-run plans in 0.1.0g.',
     "'surfaces' => ['tables', 'settings', 'permissions', 'navigation', 'storage', 'packages', 'module_files']" => 'Cleaner must pass every recognised residue surface to the host primitive.',
     'Protected module - cleanup planning disabled.' => 'Protected modules must fail closed server-side.',
     'module_generator' => 'Module Generator must be in the protected planning set.',

@@ -1,5 +1,12 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0g-CX
+
+- Replaced the Cleaner console button strip with the host Categories left rail and mobile Categories Menu links.
+- Bumped the host minimum to consume the shared routed category-link component.
+
+Host minimum: `0.7.9d-CX`.
+
 ## 0.1.0e-CX
 
 - Fixed the live MariaDB/MySQL 500 on `/admin/module-cleaner` by renaming package inventory SQL aliases from reserved/ambiguous `rows` and `bytes` to `package_rows` and `package_bytes`.

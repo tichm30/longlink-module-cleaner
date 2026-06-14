@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Longlink Module Cleaner",
-    "version": "0.1.0f",
+    "version": "0.1.0g",
     "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -106,8 +106,9 @@
             "module_cleaner_cleanup_logs"
         ]
     },
-    "requires_host_min_version": "0.7.9b-CX",
+    "requires_host_min_version": "0.7.9d-CX",
     "notes": [
+        "0.1.0g replaces the Cleaner console button strip with host responsive category links and mobile Categories Menu behaviour.",
         "0.1.0f exposes Cleaner as a Platform Tools console with dashboard, registry, module details, dry-run plans, orphan tables, backups, quarantine, logs, and settings views.",
         "0.1.0f keeps purge execution dry-run/host-primitive only while surfacing the full cleanup workflow structure for review and future gated execution.",
         "0.1.0e renames package inventory SQL aliases away from MariaDB reserved words to prevent the admin dashboard 500 on MySQL/MariaDB hosts.",

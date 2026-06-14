@@ -9,8 +9,8 @@ return [
         'subtitle' => 'Inventory addon ownership snapshots, prepare dry-run cleanup plans, and keep purge execution inside the host safety boundary.',
     ],
     'sections' => [
-        'title' => 'Cleaner Console',
-        'description' => 'Inspect residue, plan cleanup, review backups, and audit cleanup activity.',
+        'title' => 'Categories',
+        'description' => 'Choose a cleanup area to open.',
         'dashboard' => 'Dashboard',
         'registry' => 'Module Registry',
         'plan' => 'Cleanup Plans',

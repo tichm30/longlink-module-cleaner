@@ -1,9 +1,7 @@
-<x-card :title="__('module_cleaner::messages.sections.title')" :description="__('module_cleaner::messages.sections.description')">
-    <div class="settings-nav-list">
-        @foreach ($sections as $section)
-            <x-button :href="$section['route']" :variant="$activeSection === $section['key'] ? 'primary' : 'secondary'" :icon="$section['icon']">
-                {{ $section['label'] }}
-            </x-button>
-        @endforeach
-    </div>
-</x-card>
+<x-responsive-category-links
+    :items="$sections"
+    :active-key="$activeSection"
+    :menu-label="__('module_cleaner::messages.sections.title')"
+    :mobile-menu-label="__('app.settings.mobile_category_menu')"
+    :menu-help="__('module_cleaner::messages.sections.description')"
+/>
