@@ -1,8 +1,8 @@
 {
     "key": "module_cleaner",
-    "name": "Longlink Module Cleaner",
-    "version": "0.1.0h",
-    "description": "Inventory, plan, audit, and safely orchestrate addon module residue cleanup through host-owned purge primitives.",
+    "name": "Module Cleaner",
+    "version": "0.1.0i",
+    "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
     },
@@ -136,8 +136,9 @@
             "module_cleaner_cleanup_logs"
         ]
     },
-    "requires_host_min_version": "0.7.9d-CX",
+    "requires_host_min_version": "0.7.9i-CX",
     "notes": [
+        "0.1.0i drops redundant Longlink-prefixed addon display naming and pins the package to the host stale-navigation cleanup baseline.",
         "0.1.0h restores WorkSuite-parity P0 foundations: persisted Cleaner settings, per-module backup evidence sets, review-only orphan table detection, and backup-confirmed host purge handoff.",
         "0.1.0g replaces the Cleaner console button strip with host responsive category links and mobile Categories Menu behaviour.",
         "0.1.0f exposes Cleaner as a Platform Tools console with dashboard, registry, module details, dry-run plans, orphan tables, backups, quarantine, logs, and settings views.",

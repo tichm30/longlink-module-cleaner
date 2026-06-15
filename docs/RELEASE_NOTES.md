@@ -1,5 +1,13 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0i-CX
+
+- Renamed the packaged addon display name from `Longlink Module Cleaner` to `Module Cleaner` so the host Addon Modules list stays feature-first.
+- Tightened the manifest description to describe the cleanup workflow without repeating host branding already shown by the shell.
+- Pinned the module to host `0.7.9i-CX`, the stale Platform Tools duplicate-navigation cleanup baseline.
+
+Host minimum: `0.7.9i-CX`.
+
 ## 0.1.0g-CX
 
 - Replaced the Cleaner console button strip with the host Categories left rail and mobile Categories Menu links.

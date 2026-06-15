@@ -8,10 +8,11 @@ $root = module_repo_root();
 $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
-module_assert_same('0.1.0h', $manifest['version'] ?? null, 'Canonical release must be 0.1.0h.');
+module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest display name must avoid redundant host branding.');
+module_assert_same('0.1.0i', $manifest['version'] ?? null, 'Canonical release must be 0.1.0i.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
-module_assert_same('0.7.9d-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host category-link, Platform Tools, and ownership snapshot/purge baseline.');
+module_assert_same('0.7.9i-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host category-link, stale-navigation cleanup, Platform Tools, and ownership snapshot/purge baseline.');
 
 $expectedOwnedTables = [
     'module_cleaner_cleanup_logs',
