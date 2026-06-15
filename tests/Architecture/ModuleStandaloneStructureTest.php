@@ -9,7 +9,7 @@ $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
 module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest display name must avoid redundant host branding.');
-module_assert_same('0.1.0i', $manifest['version'] ?? null, 'Canonical release must be 0.1.0i.');
+module_assert_same('0.1.0j', $manifest['version'] ?? null, 'Canonical release must be 0.1.0j.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.9i-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host category-link, stale-navigation cleanup, Platform Tools, and ownership snapshot/purge baseline.');
@@ -97,6 +97,9 @@ foreach (['registry', 'modules.show', 'modules.plan.show', 'modules.backup', 'or
     module_assert(str_contains($routeSource, "->name('".$routeName."')"), 'Cleaner route map must include '.$routeName.'.');
 }
 
+$controllerSource = (string) file_get_contents($root.'/module/src/Http/Controllers/ModuleCleanerController.php');
+module_assert(! str_contains($controllerSource, "['key' => 'plan'"), 'Cleaner section navigation must not show a duplicate Cleanup Plans link.');
+
 $planSource = (string) file_get_contents($root.'/module/src/Support/CleanupPlanService.php');
 module_assert(str_contains($planSource, 'AddonModuleRegistry'), 'Cleaner must orchestrate through the host registry.');
 module_assert(str_contains($planSource, 'purgeModuleResidue'), 'Cleaner dry-runs must use the host purge primitive.');
@@ -174,6 +177,8 @@ module_assert(! str_contains($viewSource, 'responsive-definition-list'), 'Cleane
 module_assert(str_contains($viewSource, 'v1 ownership snapshot'), 'Cleaner UI must use v1 ownership snapshot wording.');
 module_assert(str_contains($viewSource, 'module_cleaner.purge'), 'Cleaner UI must expose the reserved purge permission boundary.');
 module_assert(str_contains($viewSource, "\$entry['protected']"), 'Cleaner UI must disable plans for protected modules.');
+module_assert(str_contains($viewSource, 'surface_breakdown'), 'Cleaner registry must hide residue counts behind a row disclosure.');
+module_assert(str_contains($viewSource, "dashboard.packages"), 'Cleaner dashboard must include package stat cards.');
 foreach (['Module Registry', 'Dry-Run Cleanup Plan', 'Orphan Tables', 'Backups', 'Quarantine', 'Cleanup Logs', 'Cleaner Settings'] as $label) {
     module_assert(str_contains($viewSource, $label) || str_contains($viewSource, 'module_cleaner::messages'), 'Cleaner UI must expose '.$label.'.');
 }

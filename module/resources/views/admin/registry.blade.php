@@ -16,9 +16,7 @@
                             <tr>
                                 <th>{{ __('module_cleaner::messages.registry.module') }}</th>
                                 <th>{{ __('module_cleaner::messages.registry.status') }}</th>
-                                <th>{{ __('module_cleaner::messages.registry.snapshot') }}</th>
-                                <th>{{ __('module_cleaner::messages.registry.summary') }}</th>
-                                <th>{{ __('module_cleaner::messages.registry.protection') }}</th>
+                                <th>{{ __('module_cleaner::messages.registry.residue') }}</th>
                                 <th>{{ __('module_cleaner::messages.registry.actions') }}</th>
                             </tr>
                         </thead>
@@ -34,28 +32,31 @@
                                         <strong>{{ $module->name }}</strong>
                                         <p>{{ $module->description ?: 'No description supplied.' }}</p>
                                     </td>
-                                    <td data-label="{{ __('module_cleaner::messages.registry.status') }}"><span class="pill">{{ ucfirst((string) $module->status) }}</span></td>
-                                    <td data-label="{{ __('module_cleaner::messages.registry.snapshot') }}">
-                                        <span class="pill {{ $entry['has_snapshot'] ? 'success' : 'warning' }}">
-                                            {{ $entry['has_snapshot'] ? __('module_cleaner::messages.registry.present') : __('module_cleaner::messages.registry.missing') }}
-                                        </span>
-                                    </td>
-                                    <td data-label="{{ __('module_cleaner::messages.registry.summary') }}">
+                                    <td data-label="{{ __('module_cleaner::messages.registry.status') }}">
                                         <div class="pill-list">
-                                            <span class="pill">{{ $summary['tables'] ?? 0 }} tables</span>
-                                            <span class="pill">{{ $summary['settings'] ?? 0 }} settings</span>
-                                            <span class="pill">{{ $summary['permissions'] ?? 0 }} permissions</span>
-                                            <span class="pill">{{ $summary['storage_paths'] ?? 0 }} storage</span>
-                                            <span class="pill">{{ $summary['packages'] ?? 0 }} packages</span>
+                                            <span class="pill">{{ ucfirst((string) $module->status) }}</span>
+                                            <span class="pill {{ $entry['has_snapshot'] ? 'success' : 'warning' }}">
+                                                {{ $entry['has_snapshot'] ? __('module_cleaner::messages.registry.present') : __('module_cleaner::messages.registry.missing') }}
+                                            </span>
+                                            <span class="pill {{ $entry['protected'] ? 'warning' : 'success' }}">
+                                                {{ $entry['protected'] ? __('module_cleaner::messages.registry.protected') : __('module_cleaner::messages.registry.ready') }}
+                                            </span>
                                         </div>
-                                    </td>
-                                    <td data-label="{{ __('module_cleaner::messages.registry.protection') }}">
-                                        <span class="pill {{ $entry['protected'] ? 'warning' : 'success' }}">
-                                            {{ $entry['protected'] ? __('module_cleaner::messages.registry.protected') : __('module_cleaner::messages.registry.standard') }}
-                                        </span>
                                         @if ($entry['protected_reason'])
                                             <p class="form-help">{{ $entry['protected_reason'] }}</p>
                                         @endif
+                                    </td>
+                                    <td data-label="{{ __('module_cleaner::messages.registry.residue') }}">
+                                        <details>
+                                            <summary>{{ __('module_cleaner::messages.registry.surface_breakdown') }}</summary>
+                                            <div class="pill-list">
+                                                <span class="pill">{{ $summary['tables'] ?? 0 }} tables</span>
+                                                <span class="pill">{{ $summary['settings'] ?? 0 }} settings</span>
+                                                <span class="pill">{{ $summary['permissions'] ?? 0 }} permissions</span>
+                                                <span class="pill">{{ $summary['storage_paths'] ?? 0 }} storage</span>
+                                                <span class="pill">{{ $summary['packages'] ?? 0 }} packages</span>
+                                            </div>
+                                        </details>
                                     </td>
                                     <td data-label="{{ __('module_cleaner::messages.registry.actions') }}">
                                         <div class="form-actions">

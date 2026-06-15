@@ -1,5 +1,14 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0j-CX
+
+- Reworked the Cleaner dashboard into real top-level stat cards for snapshot readiness, protected modules, owned tables, and stored package residue.
+- Removed the duplicate `Cleanup Plans` Categories link; dry-run plans remain accessible from module details and registry actions where they have module context.
+- Compressed the Module Registry table from a wide six-column layout into a four-column mobile-card table with residue counts behind a row disclosure.
+- Added clearer spacing around Cleaner settings sections using the host form stack utility.
+
+Host minimum: `0.7.9i-CX`.
+
 ## 0.1.0i-CX
 
 - Renamed the packaged addon display name from `Longlink Module Cleaner` to `Module Cleaner` so the host Addon Modules list stays feature-first.

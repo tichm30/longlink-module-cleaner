@@ -6,31 +6,36 @@
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
 
-        <x-card :title="__('module_cleaner::messages.dashboard.summary')" :description="__('module_cleaner::messages.dashboard.summary_body')">
-            <div class="form-grid two">
-                <div class="settings-section-card">
-                    <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.modules') }}</span>
-                    <strong>{{ $summary['modules'] }}</strong>
+        <div class="form-stack">
+            <x-card :title="__('module_cleaner::messages.dashboard.summary')" :description="__('module_cleaner::messages.dashboard.summary_body')">
+                <div class="form-actions">
+                    <x-button :href="route('admin.module-cleaner.registry')" icon="blocks">{{ __('module_cleaner::messages.dashboard.open_registry') }}</x-button>
+                    <x-button :href="route('admin.module-cleaner.settings')" variant="secondary" icon="settings">{{ __('module_cleaner::messages.dashboard.open_settings') }}</x-button>
                 </div>
-                <div class="settings-section-card">
-                    <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.snapshots') }}</span>
-                    <strong>{{ $summary['snapshots'] }}</strong>
-                </div>
-                <div class="settings-section-card">
-                    <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.protected') }}</span>
-                    <strong>{{ $summary['protected'] }}</strong>
-                </div>
-                <div class="settings-section-card">
-                    <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.tables') }}</span>
-                    <strong>{{ $summary['tables'] }}</strong>
-                </div>
-            </div>
+            </x-card>
 
-            <div class="form-actions">
-                <x-button :href="route('admin.module-cleaner.registry')" icon="blocks">{{ __('module_cleaner::messages.dashboard.open_registry') }}</x-button>
-                <x-button :href="route('admin.module-cleaner.settings')" variant="secondary" icon="settings">{{ __('module_cleaner::messages.dashboard.open_settings') }}</x-button>
+            <div class="form-grid two">
+                <x-card :title="__('module_cleaner::messages.dashboard.modules_title')" :description="__('module_cleaner::messages.dashboard.snapshot_help')">
+                    <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.snapshots') }}</span>
+                    <strong>{{ $summary['snapshots'] }} / {{ $summary['modules'] }}</strong>
+                </x-card>
+
+                <x-card :title="__('module_cleaner::messages.dashboard.protected_title')" :description="__('module_cleaner::messages.dashboard.protected_help')">
+                    <span class="eyebrow">{{ __('module_cleaner::messages.registry.protected') }}</span>
+                    <strong>{{ $summary['protected'] }}</strong>
+                </x-card>
+
+                <x-card :title="__('module_cleaner::messages.dashboard.tables_title')" :description="__('module_cleaner::messages.dashboard.tables_help')">
+                    <span class="eyebrow">{{ __('module_cleaner::messages.details.tables') }}</span>
+                    <strong>{{ $summary['tables'] }}</strong>
+                </x-card>
+
+                <x-card :title="__('module_cleaner::messages.dashboard.packages_title')" :description="__('module_cleaner::messages.dashboard.packages_help')">
+                    <span class="eyebrow">{{ __('module_cleaner::messages.details.packages') }}</span>
+                    <strong>{{ $summary['packages'] }}</strong>
+                </x-card>
             </div>
-        </x-card>
+        </div>
 
         @if ($latestPlan)
             <x-card :title="__('module_cleaner::messages.dashboard.latest_plan')" :description="__('module_cleaner::messages.plan.guard')">

@@ -176,7 +176,6 @@ class ModuleCleanerController extends Controller
         return [
             ['key' => 'dashboard', 'label' => __('module_cleaner::messages.sections.dashboard'), 'route' => route('admin.module-cleaner.index'), 'icon' => 'layout-dashboard'],
             ['key' => 'registry', 'label' => __('module_cleaner::messages.sections.registry'), 'route' => route('admin.module-cleaner.registry'), 'icon' => 'blocks'],
-            ['key' => 'plan', 'label' => __('module_cleaner::messages.sections.plan'), 'route' => route('admin.module-cleaner.registry'), 'icon' => 'clipboard'],
             ['key' => 'orphans', 'label' => __('module_cleaner::messages.sections.orphans'), 'route' => route('admin.module-cleaner.orphans'), 'icon' => 'database-zap'],
             ['key' => 'backups', 'label' => __('module_cleaner::messages.sections.backups'), 'route' => route('admin.module-cleaner.backups'), 'icon' => 'database-backup'],
             ['key' => 'quarantine', 'label' => __('module_cleaner::messages.sections.quarantine'), 'route' => route('admin.module-cleaner.quarantine'), 'icon' => 'archive'],
