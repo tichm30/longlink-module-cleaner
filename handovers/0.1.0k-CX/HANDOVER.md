@@ -20,4 +20,4 @@ This batch applies the 16-Jun host utility canon to Module Cleaner and completes
 - `git diff --check`
 - Release zip built by `packaging/build-module-zip.sh`
 
-Delivery verified on remote: PENDING
+Delivery verified on remote: 9c5ce2714d1545f25693bc3ae68038d3632a214b
