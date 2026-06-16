@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0j",
+    "version": "0.1.0k",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -136,8 +136,9 @@
             "module_cleaner_cleanup_logs"
         ]
     },
-    "requires_host_min_version": "0.7.9i-CX",
+    "requires_host_min_version": "0.7.9j-CX",
     "notes": [
+        "0.1.0k converges Cleaner admin spacing onto the host .stack utility, applies is-card-table wrappers across every mobile-card table, and pins to the 0.7.9j host utility batch.",
         "0.1.0j batches Cleaner UI compliance: dashboard stat cards, compact registry rows, no duplicate Cleanup Plans link, and better settings spacing.",
         "0.1.0i drops redundant Longlink-prefixed addon display naming and pins the package to the host stale-navigation cleanup baseline.",
         "0.1.0h restores WorkSuite-parity P0 foundations: persisted Cleaner settings, per-module backup evidence sets, review-only orphan table detection, and backup-confirmed host purge handoff.",

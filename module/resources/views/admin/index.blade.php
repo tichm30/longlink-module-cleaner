@@ -6,7 +6,7 @@
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
 
-        <div class="form-stack">
+        <div class="stack">
             <x-card :title="__('module_cleaner::messages.dashboard.summary')" :description="__('module_cleaner::messages.dashboard.summary_body')">
                 <div class="form-actions">
                     <x-button :href="route('admin.module-cleaner.registry')" icon="blocks">{{ __('module_cleaner::messages.dashboard.open_registry') }}</x-button>
@@ -53,7 +53,7 @@
             @if ($logs === [])
                 <x-empty-state :description="__('module_cleaner::messages.logs.empty')" />
             @else
-                <div class="data-table-wrap">
+                <div class="data-table-wrap is-card-table">
                     <table class="data-table is-mobile-card-table">
                         <thead>
                             <tr>

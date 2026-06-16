@@ -9,12 +9,12 @@
         <form method="POST" action="{{ route('admin.module-cleaner.settings.update') }}">
             @csrf
 
-            <div class="form-stack">
+            <div class="stack">
                 <div class="form-grid two">
                     <x-card :title="__('module_cleaner::messages.settings.safety')">
                         <p class="form-help">{{ __('module_cleaner::messages.plan.guard') }}</p>
                         <p class="form-help">module_cleaner.purge is required for backup creation and host purge handoff.</p>
-                        <div class="form-stack">
+                        <div class="stack">
                             <label class="choice-row">
                                 <input type="checkbox" name="require_backup" value="1" @checked($defaults['require_backup'])>
                                 <span>{{ __('module_cleaner::messages.settings.require_backup') }}</span>

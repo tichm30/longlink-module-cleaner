@@ -10,7 +10,7 @@
             @if ($candidates === [])
                 <x-empty-state :description="__('module_cleaner::messages.orphans.empty')" />
             @else
-                <div class="data-table-wrap">
+                <div class="data-table-wrap is-card-table">
                     <table class="data-table is-mobile-card-table">
                         <thead>
                             <tr>

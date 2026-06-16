@@ -34,7 +34,7 @@
                     @endforeach
                 </div>
 
-                <div class="data-table-wrap">
+                <div class="data-table-wrap is-card-table">
                     <table class="data-table is-mobile-card-table">
                         <thead>
                             <tr>

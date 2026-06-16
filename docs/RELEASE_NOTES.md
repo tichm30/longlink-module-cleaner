@@ -1,5 +1,13 @@
 # Longlink Module Cleaner Release Notes
 
+## 0.1.0k-CX
+
+- Replaced Cleaner-owned `form-stack` usage with the canonical host `.stack` spacing utility.
+- Added the full `data-table-wrap is-card-table` wrapper contract to every Cleaner mobile-card table.
+- Pinned the package to the host `0.7.9j-CX` utility baseline.
+
+Host minimum: `0.7.9j-CX`.
+
 ## 0.1.0j-CX
 
 - Reworked the Cleaner dashboard into real top-level stat cards for snapshot readiness, protected modules, owned tables, and stored package residue.
