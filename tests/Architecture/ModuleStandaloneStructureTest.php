@@ -9,7 +9,7 @@ $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
 module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest display name must avoid redundant host branding.');
-module_assert_same('0.1.0k', $manifest['version'] ?? null, 'Canonical release must be 0.1.0k.');
+module_assert_same('0.1.0l', $manifest['version'] ?? null, 'Canonical release must be 0.1.0l.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.9j-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host utility, category-link, stale-navigation cleanup, Platform Tools, and ownership snapshot/purge baseline.');
@@ -174,6 +174,7 @@ module_assert(str_contains($viewSource, 'data-table-wrap is-card-table'), 'Clean
 module_assert(str_contains($viewSource, 'data-table is-mobile-card-table'), 'Cleaner UI must use the host mobile-card table class.');
 module_assert(str_contains($viewSource, 'class="stack"'), 'Cleaner UI must use the canonical host stack utility between major cards.');
 module_assert(! str_contains($viewSource, 'form-stack'), 'Cleaner UI must not ship deprecated module-invented form-stack classes.');
+module_assert(! str_contains($viewSource, '@php('), 'Cleaner views must use block-form @php directives so inline expressions do not trip Blade compilation.');
 module_assert(str_contains($viewSource, 'pill-list'), 'Cleaner UI must use host token-backed pill layout.');
 module_assert(! str_contains($viewSource, 'responsive-data-grid'), 'Cleaner UI must not use module-private responsive grid classes.');
 module_assert(! str_contains($viewSource, 'responsive-definition-list'), 'Cleaner UI must not use module-private definition-list classes.');

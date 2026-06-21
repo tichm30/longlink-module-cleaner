@@ -9,7 +9,9 @@
             <div class="alert alert-danger">{{ $errors->first() }}</div>
         @endif
 
-        @php($module = $entry['module'])
+        @php
+            $module = $entry['module'];
+        @endphp
 
         <x-card :title="$module->name" :description="__('module_cleaner::messages.plan.guard')">
             @if (! $plan)
