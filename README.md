@@ -1,4 +1,4 @@
-# longlink-module-cleaner
+\nCurrent package version: `0.1.0m`.
 
 The Longlink Module Cleaner addon module. Source of truth for the safe-removal tool that uninstalls addon modules **completely** — no orphan database tables, no orphan files, no orphan settings/permissions — with backups, quarantine, dependency checks, and a full audit trail.
 

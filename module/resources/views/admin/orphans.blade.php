@@ -1,6 +1,11 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.orphans.title')" :subtitle="__('module_cleaner::messages.orphans.subtitle')">
-    <div class="settings-category-layout">
-        @include('module_cleaner::admin.partials.section-nav')
+    <x-settings-category-layout :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">
+
+        <x-slot:categories>
+
+            @include('module_cleaner::admin.partials.section-nav')
+
+        </x-slot:categories>
 
         <x-card :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">
             @unless ($detectionEnabled)
@@ -34,5 +39,5 @@
                 </div>
             @endif
         </x-card>
-    </div>
+    </x-settings-category-layout>
 </x-layouts.app-shell>

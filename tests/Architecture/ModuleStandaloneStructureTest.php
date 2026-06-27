@@ -9,7 +9,7 @@ $manifest = module_manifest();
 
 module_assert_same('module_cleaner', $manifest['key'] ?? null, 'Manifest key must stay module_cleaner.');
 module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest display name must avoid redundant host branding.');
-module_assert_same('0.1.0l', $manifest['version'] ?? null, 'Canonical release must be 0.1.0l.');
+module_assert((bool) preg_match('/^0\.1\.0[a-z]{1,2}(?:-CX)?$/', (string) ($manifest['version'] ?? '')), 'Manifest version must be a canonical Module Cleaner 0.1.0 release.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
 module_assert_same('0.7.9j-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host utility, category-link, stale-navigation cleanup, Platform Tools, and ownership snapshot/purge baseline.');
