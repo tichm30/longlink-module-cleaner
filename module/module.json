@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0m",
+    "version": "0.1.0n-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"

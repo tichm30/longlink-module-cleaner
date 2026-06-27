@@ -1,11 +1,11 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.quarantine.title')" :subtitle="__('module_cleaner::messages.quarantine.subtitle')">
     <x-settings-category-layout :title="__('module_cleaner::messages.quarantine.title')" :description="__('module_cleaner::messages.quarantine.subtitle')">
 
-        <x-slot:categories>
+        <x-slot:sidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
 
-        </x-slot:categories>
+        </x-slot:sidebar>
 
         <x-card :title="__('module_cleaner::messages.quarantine.title')" :description="__('module_cleaner::messages.quarantine.path', ['path' => $storagePath])">
             @if ($items === [])
