@@ -1,11 +1,10 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.settings.title')" :subtitle="__('module_cleaner::messages.settings.subtitle')">
-    <x-settings-category-layout :title="__('module_cleaner::messages.settings.title')" :description="__('module_cleaner::messages.settings.subtitle')">
-
-        <x-slot:sidebar>
+        <x-slot:secondarySidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
+        </x-slot:secondarySidebar>
 
-        </x-slot:sidebar>
+    <x-settings-category-layout :title="__('module_cleaner::messages.settings.title')" :description="__('module_cleaner::messages.settings.subtitle')">
 
         @if (session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>

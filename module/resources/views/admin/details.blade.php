@@ -1,11 +1,10 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.details.title')" :subtitle="__('module_cleaner::messages.details.subtitle')">
-    <x-settings-category-layout :title="__('module_cleaner::messages.details.title')" :description="__('module_cleaner::messages.details.subtitle')">
-
-        <x-slot:sidebar>
+        <x-slot:secondarySidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
+        </x-slot:secondarySidebar>
 
-        </x-slot:sidebar>
+    <x-settings-category-layout :title="__('module_cleaner::messages.details.title')" :description="__('module_cleaner::messages.details.subtitle')">
 
         @php
             $module = $entry['module'];

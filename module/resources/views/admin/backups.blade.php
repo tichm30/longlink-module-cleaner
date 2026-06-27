@@ -1,11 +1,10 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.backups.title')" :subtitle="__('module_cleaner::messages.backups.subtitle')">
-    <x-settings-category-layout :title="__('module_cleaner::messages.backups.title')" :description="__('module_cleaner::messages.backups.subtitle')">
-
-        <x-slot:sidebar>
+        <x-slot:secondarySidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
+        </x-slot:secondarySidebar>
 
-        </x-slot:sidebar>
+    <x-settings-category-layout :title="__('module_cleaner::messages.backups.title')" :description="__('module_cleaner::messages.backups.subtitle')">
 
         <x-card :title="__('module_cleaner::messages.backups.title')" :description="__('module_cleaner::messages.backups.path', ['path' => $storagePath])">
             @if ($backups === [])

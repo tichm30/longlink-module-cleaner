@@ -1,11 +1,10 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.registry.title')" :subtitle="__('module_cleaner::messages.registry.subtitle')">
-    <x-settings-category-layout :title="__('module_cleaner::messages.registry.title')" :description="__('module_cleaner::messages.registry.subtitle')">
-
-        <x-slot:sidebar>
+        <x-slot:secondarySidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
+        </x-slot:secondarySidebar>
 
-        </x-slot:sidebar>
+    <x-settings-category-layout :title="__('module_cleaner::messages.registry.title')" :description="__('module_cleaner::messages.registry.subtitle')">
 
         @if ($errors->any())
             <div class="alert alert-danger">{{ $errors->first() }}</div>

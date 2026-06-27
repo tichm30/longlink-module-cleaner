@@ -1,11 +1,10 @@
 <x-layouts.app-shell :title="__('module_cleaner::messages.orphans.title')" :subtitle="__('module_cleaner::messages.orphans.subtitle')">
-    <x-settings-category-layout :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">
-
-        <x-slot:sidebar>
+        <x-slot:secondarySidebar>
 
             @include('module_cleaner::admin.partials.section-nav')
+        </x-slot:secondarySidebar>
 
-        </x-slot:sidebar>
+    <x-settings-category-layout :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">
 
         <x-card :title="__('module_cleaner::messages.orphans.title')" :description="__('module_cleaner::messages.orphans.subtitle')">
             @unless ($detectionEnabled)
