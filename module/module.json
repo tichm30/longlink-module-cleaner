@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0p-CX",
+    "version": "0.1.0q-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -136,8 +136,9 @@
             "module_cleaner_cleanup_logs"
         ]
     },
-    "requires_host_min_version": "0.7.12w-CX",
+    "requires_host_min_version": "0.7.12y-CX",
     "notes": [
+        "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",
         "0.1.0p-CX migrates settings secondary sidebars to the host x-secondary-sidebar-nav component and requires host 0.7.12w-CX.",
         "0.1.0l replaces the remaining Cleaner @php(...) one-line Blade directive with block-form @php/@endphp and adds an architecture guard against the Blade compile hazard.",
         "0.1.0k converges Cleaner admin spacing onto the host .stack utility, applies is-card-table wrappers across every mobile-card table, and pins to the 0.7.9j host utility batch.",
@@ -154,6 +155,7 @@
         "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ],
     "release_notes": [
+        "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",
         "0.1.0p-CX migrates settings secondary sidebars to the host x-secondary-sidebar-nav component and requires host 0.7.12w-CX."
     ]
 }

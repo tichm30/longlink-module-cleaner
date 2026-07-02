@@ -12,7 +12,7 @@ module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest displa
 module_assert((bool) preg_match('/^0\.1\.0[a-z]{1,2}(?:-CX)?$/', (string) ($manifest['version'] ?? '')), 'Manifest version must be a canonical Module Cleaner 0.1.0 release.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
-module_assert_same('0.7.9j-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host utility, category-link, stale-navigation cleanup, Platform Tools, and ownership snapshot/purge baseline.');
+module_assert_same('0.7.12y-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the current host module-platform gate baseline.');
 
 $expectedOwnedTables = [
     'module_cleaner_cleanup_logs',
@@ -87,6 +87,11 @@ foreach ([
 
 $providerSource = (string) file_get_contents($root.'/module/src/ModuleCleanerModuleProvider.php');
 module_assert(str_contains($providerSource, 'extends AbstractModuleRuntimeProvider'), 'Provider must inherit the host base provider.');
+module_assert(str_contains($providerSource, 'implements SampleDataProviderContract'), 'Provider must implement the host sample data provider contract.');
+module_assert(str_contains($providerSource, 'use SeedsSampleDataTables'), 'Provider must use the shared host sample data table seeding helper.');
+foreach (['sampleDataTables', 'module_cleaner_cleanup_logs', 'sample.module_cleaner.cleanup_log.dry_run'] as $sampleSignal) {
+    module_assert(str_contains($providerSource, $sampleSignal), 'Provider must declare sample data signal '.$sampleSignal.'.');
+}
 module_assert(str_contains($providerSource, "! Route::has('admin.module-cleaner.index')"), 'Provider must guard route loading with a sentinel route.');
 module_assert(str_contains($providerSource, 'platform_tools.module_cleaner'), 'Cleaner menu must register under Platform Tools.');
 module_assert(str_contains($providerSource, "'broom'"), 'Cleaner menu must use the semantic broom icon.');
@@ -166,9 +171,9 @@ module_assert(str_contains($viewSource, '<x-layouts.app-shell'), 'Cleaner UI mus
 module_assert(! str_contains($viewSource, '<x-app-layout'), 'Cleaner UI must not use the missing x-app-layout component.');
 module_assert(str_contains($viewSource, '<x-card'), 'Cleaner UI must use host cards.');
 module_assert(str_contains($viewSource, '<x-button'), 'Cleaner UI must use host buttons.');
-module_assert(str_contains($viewSource, '<x-responsive-category-links'), 'Cleaner UI must use the host category-link component.');
+module_assert(str_contains($viewSource, '<x-secondary-sidebar-nav'), 'Cleaner UI must use the host secondary sidebar component.');
 module_assert(str_contains($viewSource, 'settings-category-layout'), 'Cleaner UI must render a desktop left category column.');
-module_assert(str_contains($viewSource, 'app.settings.mobile_category_menu'), 'Cleaner UI must render the shared mobile Categories Menu.');
+module_assert(! str_contains($viewSource, '<x-responsive-category-links'), 'Cleaner UI must not use the content/mobile category-links component for settings sidebars.');
 module_assert(str_contains($viewSource, 'data-table-wrap'), 'Cleaner UI must use the host table wrapper.');
 module_assert(str_contains($viewSource, 'data-table-wrap is-card-table'), 'Cleaner UI must use the full host mobile-card table wrapper.');
 module_assert(str_contains($viewSource, 'data-table is-mobile-card-table'), 'Cleaner UI must use the host mobile-card table class.');

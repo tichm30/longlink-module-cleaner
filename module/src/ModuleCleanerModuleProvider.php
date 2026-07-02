@@ -4,11 +4,15 @@ namespace Modules\ModuleCleaner;
 
 use App\Support\Modules\AbstractModuleRuntimeProvider;
 use App\Support\Navigation\MenuRegistry;
+use App\Support\SampleData\SampleDataProviderContract;
+use App\Support\SampleData\SeedsSampleDataTables;
 use Illuminate\Support\Facades\Route;
 use Modules\ModuleCleaner\Settings\ModuleCleanerSettingsCatalog;
 
-class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider
+class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider implements SampleDataProviderContract
 {
+    use SeedsSampleDataTables;
+
     public function moduleKey(): string
     {
         return 'module_cleaner';
@@ -68,6 +72,42 @@ class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider
     public function viewsPath(): ?string
     {
         return is_dir(__DIR__.'/../resources/views') ? __DIR__.'/../resources/views' : null;
+    }
+
+    protected function sampleDataTables(): array
+    {
+        return [
+            [
+                'table' => 'module_cleaner_cleanup_logs',
+                'label' => 'Sample Cleaner Cleanup Logs',
+                'description' => 'Sample dry-run log rows for Cleaner dashboard and audit demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.cleanup_log.dry_run',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'module_version' => '0.1.0',
+                            'action' => 'dry_run',
+                            'status' => 'planned',
+                            'tables_planned' => ['sample_addon_records'],
+                            'files_planned' => ['modules/sample_addon'],
+                            'settings_planned' => ['sample_addon.enabled'],
+                            'permissions_planned' => ['sample_addon.view'],
+                            'navigation_planned' => ['sample_addon.dashboard'],
+                            'storage_planned' => ['modules/sample_addon'],
+                            'packages_planned' => ['longlink-sample-addon-0.1.0.zip'],
+                            'module_files_planned' => ['sample_addon/module.json'],
+                            'size_freed_bytes' => 0,
+                            'backup_ref' => 'sample-cleaner-backup',
+                            'details' => [
+                                'sample_record_key' => 'sample.module_cleaner.cleanup_log.dry_run',
+                                'purpose' => 'Sample dry-run cleanup evidence for demo environments.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function boot(): void
