@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use App\Support\Settings\ModuleSettingsPersister;
 use App\Support\Settings\SettingsStore;
 use Modules\ModuleCleaner\Settings\ModuleCleanerSettingsCatalog;
 use Modules\ModuleCleaner\Support\CleanupPlanService;
@@ -130,7 +131,7 @@ class ModuleCleanerController extends Controller
         ]);
     }
 
-    public function updateSettings(Request $request, SettingsStore $settings): RedirectResponse
+    public function updateSettings(Request $request, ModuleSettingsPersister $settings): RedirectResponse
     {
         $request->validate([
             'backup_retention_days' => ['nullable', 'integer', 'min:0', 'max:3650'],
@@ -139,7 +140,7 @@ class ModuleCleanerController extends Controller
             'slack_webhook_url' => ['nullable', 'url', 'max:255'],
         ]);
 
-        $settings->updateMany([
+        $settings->persistPayload([
             'module_cleaner.require_backup' => $request->boolean('require_backup'),
             'module_cleaner.require_typed_confirmation' => $request->boolean('require_typed_confirmation'),
             'module_cleaner.allow_dry_run' => $request->boolean('allow_dry_run'),
