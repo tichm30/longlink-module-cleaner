@@ -30,6 +30,9 @@ Route::middleware(['web', 'auth'])
         Route::post('/modules/{module}/backup', [ModuleCleanerController::class, 'backup'])
             ->middleware('can:module_cleaner.purge')
             ->name('modules.backup');
+        Route::post('/modules/{module}/quarantine', [ModuleCleanerController::class, 'quarantineModule'])
+            ->middleware('can:module_cleaner.purge')
+            ->name('modules.quarantine');
 
         Route::get('/orphans', [ModuleCleanerController::class, 'orphans'])
             ->middleware('can:module_cleaner.view')
@@ -38,6 +41,9 @@ Route::middleware(['web', 'auth'])
         Route::get('/backups', [ModuleCleanerController::class, 'backups'])
             ->middleware('can:module_cleaner.view')
             ->name('backups');
+        Route::post('/backups/{backupSet}/restore-plan', [ModuleCleanerController::class, 'prepareRestore'])
+            ->middleware('can:module_cleaner.purge')
+            ->name('backups.restore-plan');
 
         Route::get('/quarantine', [ModuleCleanerController::class, 'quarantine'])
             ->middleware('can:module_cleaner.view')

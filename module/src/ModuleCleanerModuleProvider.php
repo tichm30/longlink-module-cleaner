@@ -107,6 +107,115 @@ class ModuleCleanerModuleProvider extends AbstractModuleRuntimeProvider implemen
                     ],
                 ],
             ],
+            [
+                'table' => 'module_cleaner_cleanup_plans',
+                'label' => 'Sample Cleaner Cleanup Plans',
+                'description' => 'Sample persisted dry-run plans for Cleaner coordination demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.cleanup_plan.sample_addon',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'module_version' => '0.1.0',
+                            'status' => 'prepared',
+                            'surfaces' => ['tables', 'settings', 'permissions'],
+                            'plan_payload' => ['dry_run' => true, 'sample_record_key' => 'sample.module_cleaner.cleanup_plan.sample_addon'],
+                            'dependency_graph' => ['incoming' => [], 'outgoing' => []],
+                            'orphan_snapshot' => [],
+                            'backup_required' => true,
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'table' => 'module_cleaner_backup_sets',
+                'label' => 'Sample Cleaner Backup Sets',
+                'description' => 'Sample backup-set records for Cleaner restore-plan demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.backup.sample_addon',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'module_version' => '0.1.0',
+                            'backup_ref' => 'sample-addon-backup',
+                            'relative_path' => 'module_cleaner/backups/sample_addon/sample',
+                            'status' => 'created',
+                            'manifest_payload' => ['sample_record_key' => 'sample.module_cleaner.backup.sample_addon'],
+                            'files' => ['manifest.json'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'table' => 'module_cleaner_quarantine_items',
+                'label' => 'Sample Cleaner Quarantine Items',
+                'description' => 'Sample quarantine records for Cleaner demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.quarantine.sample_addon',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'item_type' => 'module_files',
+                            'source_path' => 'modules/sample_addon',
+                            'quarantine_path' => 'module_cleaner/quarantine/sample_addon/sample/module_files/sample_addon',
+                            'status' => 'copied',
+                            'bytes' => 0,
+                            'metadata' => ['sample_record_key' => 'sample.module_cleaner.quarantine.sample_addon'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'table' => 'module_cleaner_orphan_candidates',
+                'label' => 'Sample Cleaner Orphan Candidates',
+                'description' => 'Sample orphan candidate rows for review demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.orphan.sample_addon',
+                        'attributes' => [
+                            'table_name' => 'sample_addon_legacy_rows',
+                            'confidence' => 'medium',
+                            'status' => 'pending_review',
+                            'row_count' => 0,
+                            'evidence' => ['sample_record_key' => 'sample.module_cleaner.orphan.sample_addon'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'table' => 'module_cleaner_dependency_edges',
+                'label' => 'Sample Cleaner Dependency Edges',
+                'description' => 'Sample dependency graph rows for Cleaner demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.dependency.sample_addon',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'depends_on_module_key' => 'sample_core',
+                            'dependency_type' => 'runtime',
+                            'source' => 'sample',
+                            'is_blocking' => true,
+                            'metadata' => ['sample_record_key' => 'sample.module_cleaner.dependency.sample_addon'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'table' => 'module_cleaner_self_destruct_checks',
+                'label' => 'Sample Cleaner Self-Destruct Checks',
+                'description' => 'Sample self-destruct guard checks for Cleaner demos.',
+                'rows' => [
+                    [
+                        'record_key' => 'sample.module_cleaner.self_destruct.sample_addon',
+                        'attributes' => [
+                            'module_key' => 'sample_addon',
+                            'status' => 'allowed_for_host_handoff',
+                            'reason' => 'Sample module has no dependent module references.',
+                            'checks' => ['sample_record_key' => 'sample.module_cleaner.self_destruct.sample_addon'],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 use App\Support\Settings\ModuleSettingsPersister;
 use App\Support\Settings\SettingsStore;
 use Modules\ModuleCleaner\Settings\ModuleCleanerSettingsCatalog;
+use Modules\ModuleCleaner\Support\CleanerPersistenceService;
 use Modules\ModuleCleaner\Support\CleanupPlanService;
 use Modules\ModuleCleaner\Support\OrphanTableDetector;
 use Modules\ModuleCleaner\Support\ResidueInventoryService;
@@ -78,7 +79,12 @@ class ModuleCleanerController extends Controller
     public function backup(Request $request, AddonModule $module, CleanupPlanService $plans): RedirectResponse
     {
         try {
-            $backup = $plans->backup($module, $request->user());
+            $plan = session('module_cleaner_plan');
+            $backup = $plans->backup(
+                $module,
+                $request->user(),
+                is_array($plan) && isset($plan['cleaner_plan_id']) ? (int) $plan['cleaner_plan_id'] : null,
+            );
         } catch (ValidationException $exception) {
             return redirect()
                 ->route('admin.module-cleaner.modules.plan.show', $module)
@@ -91,28 +97,67 @@ class ModuleCleanerController extends Controller
             ->with('module_cleaner_backup', $backup);
     }
 
-    public function orphans(OrphanTableDetector $detector, SettingsStore $settings): View
+    public function quarantineModule(Request $request, AddonModule $module, CleanupPlanService $plans): RedirectResponse
+    {
+        try {
+            $quarantine = $plans->quarantine(
+                $module,
+                $request->user(),
+                session('module_cleaner_plan'),
+                session('module_cleaner_backup'),
+            );
+        } catch (ValidationException $exception) {
+            return redirect()
+                ->route('admin.module-cleaner.modules.plan.show', $module)
+                ->withErrors($exception->errors());
+        }
+
+        return redirect()
+            ->route('admin.module-cleaner.modules.plan.show', $module)
+            ->with('status', __('module_cleaner::messages.messages.quarantine_ready', ['module' => $module->name]))
+            ->with('module_cleaner_quarantine', $quarantine);
+    }
+
+    public function prepareRestore(Request $request, int $backupSet, CleanupPlanService $plans): RedirectResponse
+    {
+        $restore = $plans->prepareRestore($backupSet, $request->user());
+
+        if (! $restore) {
+            return redirect()
+                ->route('admin.module-cleaner.backups')
+                ->withErrors(['backup' => __('module_cleaner::messages.messages.backup_not_found')]);
+        }
+
+        return redirect()
+            ->route('admin.module-cleaner.backups')
+            ->with('status', __('module_cleaner::messages.messages.restore_ready'));
+    }
+
+    public function orphans(OrphanTableDetector $detector, SettingsStore $settings, CleanerPersistenceService $persistence): View
     {
         $enabled = (bool) $settings->get('module_cleaner.enable_orphan_detection');
+        $candidates = $enabled ? $persistence->syncOrphanCandidates($detector->candidates()) : [];
 
         return view('module_cleaner::admin.orphans', $this->viewData('orphans') + [
-            'candidates' => $enabled ? $detector->candidates() : [],
+            'candidates' => $candidates,
             'detectionEnabled' => $enabled,
         ]);
     }
 
-    public function backups(): View
+    public function backups(CleanerPersistenceService $persistence): View
     {
         return view('module_cleaner::admin.backups', $this->viewData('backups') + [
             'backups' => $this->storedFiles(storage_path('app/module_cleaner/backups')),
+            'backupRows' => $persistence->backupRows(),
             'storagePath' => 'storage/app/module_cleaner/backups',
         ]);
     }
 
-    public function quarantine(): View
+    public function quarantine(CleanerPersistenceService $persistence): View
     {
         return view('module_cleaner::admin.quarantine', $this->viewData('quarantine') + [
             'items' => $this->storedFiles(storage_path('app/module_cleaner/quarantine')),
+            'quarantineRows' => $persistence->quarantineRows(),
             'storagePath' => 'storage/app/module_cleaner/quarantine',
         ]);
     }

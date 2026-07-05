@@ -5,6 +5,46 @@
         </x-slot:secondarySidebar>
 
     <x-settings-category-layout :title="__('module_cleaner::messages.backups.title')" :description="__('module_cleaner::messages.backups.subtitle')">
+        @if (session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">{{ $errors->first() }}</div>
+        @endif
+
+        <x-card :title="__('module_cleaner::messages.backups.records_title')">
+            @if ($backupRows === [])
+                <x-empty-state :description="__('module_cleaner::messages.backups.no_records')" />
+            @else
+                <div class="data-table-wrap is-card-table">
+                    <table class="data-table is-mobile-card-table">
+                        <thead>
+                            <tr>
+                                <th>{{ __('module_cleaner::messages.logs.module') }}</th>
+                                <th>{{ __('module_cleaner::messages.backups.backup_ref') }}</th>
+                                <th>{{ __('module_cleaner::messages.logs.status') }}</th>
+                                <th>{{ __('module_cleaner::messages.backups.restore') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($backupRows as $row)
+                                <tr>
+                                    <td data-label="{{ __('module_cleaner::messages.logs.module') }}"><code>{{ $row['module_key'] ?? '' }}</code></td>
+                                    <td data-label="{{ __('module_cleaner::messages.backups.backup_ref') }}"><code>{{ $row['backup_ref'] ?? '' }}</code></td>
+                                    <td data-label="{{ __('module_cleaner::messages.logs.status') }}"><span class="pill info">{{ $row['status'] ?? 'created' }}</span></td>
+                                    <td data-label="{{ __('module_cleaner::messages.backups.restore') }}">
+                                        <form method="POST" action="{{ route('admin.module-cleaner.backups.restore-plan', $row['id']) }}">
+                                            @csrf
+                                            <x-button type="submit" icon="rotate-ccw" variant="secondary">{{ __('module_cleaner::messages.backups.prepare_restore') }}</x-button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </x-card>
 
         <x-card :title="__('module_cleaner::messages.backups.title')" :description="__('module_cleaner::messages.backups.path', ['path' => $storagePath])">
             @if ($backups === [])

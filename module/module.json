@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0q-CX",
+    "version": "0.1.0r-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -12,10 +12,17 @@
         }
     },
     "owned_tables": [
-        "module_cleaner_cleanup_logs"
+        "module_cleaner_cleanup_logs",
+        "module_cleaner_cleanup_plans",
+        "module_cleaner_backup_sets",
+        "module_cleaner_quarantine_items",
+        "module_cleaner_orphan_candidates",
+        "module_cleaner_dependency_edges",
+        "module_cleaner_self_destruct_checks"
     ],
     "database_migrations": [
-        "2026_06_13_020000_create_module_cleaner_cleanup_logs_table"
+        "2026_06_13_020000_create_module_cleaner_cleanup_logs_table",
+        "2026_07_05_010000_create_module_cleaner_coordination_tables"
     ],
     "permissions": [
         "module_cleaner.view",
@@ -54,6 +61,11 @@
             "name": "admin.module-cleaner.modules.backup"
         },
         {
+            "method": "POST",
+            "path": "/admin/module-cleaner/modules/{module}/quarantine",
+            "name": "admin.module-cleaner.modules.quarantine"
+        },
+        {
             "method": "GET",
             "path": "/admin/module-cleaner/orphans",
             "name": "admin.module-cleaner.orphans"
@@ -62,6 +74,11 @@
             "method": "GET",
             "path": "/admin/module-cleaner/backups",
             "name": "admin.module-cleaner.backups"
+        },
+        {
+            "method": "POST",
+            "path": "/admin/module-cleaner/backups/{backupSet}/restore-plan",
+            "name": "admin.module-cleaner.backups.restore-plan"
         },
         {
             "method": "GET",
@@ -101,7 +118,13 @@
     ],
     "ownership": {
         "tables": [
-            "module_cleaner_cleanup_logs"
+            "module_cleaner_cleanup_logs",
+            "module_cleaner_cleanup_plans",
+            "module_cleaner_backup_sets",
+            "module_cleaner_quarantine_items",
+            "module_cleaner_orphan_candidates",
+            "module_cleaner_dependency_edges",
+            "module_cleaner_self_destruct_checks"
         ],
         "permission_keys": [
             "module_cleaner.view",
@@ -133,11 +156,18 @@
         "allow_hard_delete": false,
         "retain_audit_logs": true,
         "safe_to_delete_tables": [
-            "module_cleaner_cleanup_logs"
+            "module_cleaner_cleanup_logs",
+            "module_cleaner_cleanup_plans",
+            "module_cleaner_backup_sets",
+            "module_cleaner_quarantine_items",
+            "module_cleaner_orphan_candidates",
+            "module_cleaner_dependency_edges",
+            "module_cleaner_self_destruct_checks"
         ]
     },
     "requires_host_min_version": "0.7.12y-CX",
     "notes": [
+        "0.1.0r-CX adds owned persistence for cleanup plans, backup sets, quarantine items, orphan candidates, dependency edges, and self-destruct checks; dry-runs now record dependency/orphan/self-destruct evidence, backups record restore-plan metadata, and quarantine copies module files/storage/packages into Cleaner-owned quarantine without deleting source data.",
         "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",
         "0.1.0p-CX migrates settings secondary sidebars to the host x-secondary-sidebar-nav component and requires host 0.7.12w-CX.",
         "0.1.0l replaces the remaining Cleaner @php(...) one-line Blade directive with block-form @php/@endphp and adds an architecture guard against the Blade compile hazard.",
@@ -155,6 +185,7 @@
         "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ],
     "release_notes": [
+        "0.1.0r-CX persists Cleaner plan/backup/quarantine/orphan/dependency/self-destruct coordination records and adds restore-plan preparation.",
         "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",
         "0.1.0p-CX migrates settings secondary sidebars to the host x-secondary-sidebar-nav component and requires host 0.7.12w-CX."
     ]

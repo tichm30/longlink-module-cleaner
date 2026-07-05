@@ -16,6 +16,12 @@ module_assert_same('0.7.12y-CX', $manifest['requires_host_min_version'] ?? null,
 
 $expectedOwnedTables = [
     'module_cleaner_cleanup_logs',
+    'module_cleaner_cleanup_plans',
+    'module_cleaner_backup_sets',
+    'module_cleaner_quarantine_items',
+    'module_cleaner_orphan_candidates',
+    'module_cleaner_dependency_edges',
+    'module_cleaner_self_destruct_checks',
 ];
 
 module_assert_same($expectedOwnedTables, $manifest['owned_tables'] ?? null, 'Owned-table boundary must include only module_cleaner-prefixed tables.');
@@ -49,6 +55,7 @@ foreach ($manifest['permissions'] ?? [] as $permission) {
 
 $expectedMigrations = [
     '2026_06_13_020000_create_module_cleaner_cleanup_logs_table',
+    '2026_07_05_010000_create_module_cleaner_coordination_tables',
 ];
 
 module_assert_same($expectedMigrations, $manifest['database_migrations'] ?? null, 'Manifest migration declarations must match migration files.');
@@ -65,7 +72,10 @@ foreach ([
     'module/src/Http/Controllers/ModuleCleanerController.php',
     'module/src/Support/CleanerAuditLogger.php',
     'module/src/Support/CleanupPlanService.php',
+    'module/src/Support/CleanerPersistenceService.php',
+    'module/src/Support/DependencyGraphService.php',
     'module/src/Support/ModuleBackupService.php',
+    'module/src/Support/ModuleQuarantineService.php',
     'module/src/Support/OrphanTableDetector.php',
     'module/src/Support/ResidueInventoryService.php',
     'module/src/Settings/ModuleCleanerSettingsCatalog.php',
@@ -89,7 +99,7 @@ $providerSource = (string) file_get_contents($root.'/module/src/ModuleCleanerMod
 module_assert(str_contains($providerSource, 'extends AbstractModuleRuntimeProvider'), 'Provider must inherit the host base provider.');
 module_assert(str_contains($providerSource, 'implements SampleDataProviderContract'), 'Provider must implement the host sample data provider contract.');
 module_assert(str_contains($providerSource, 'use SeedsSampleDataTables'), 'Provider must use the shared host sample data table seeding helper.');
-foreach (['sampleDataTables', 'module_cleaner_cleanup_logs', 'sample.module_cleaner.cleanup_log.dry_run'] as $sampleSignal) {
+foreach (['sampleDataTables', 'module_cleaner_cleanup_logs', 'module_cleaner_cleanup_plans', 'module_cleaner_backup_sets', 'module_cleaner_quarantine_items', 'module_cleaner_orphan_candidates', 'module_cleaner_dependency_edges', 'module_cleaner_self_destruct_checks', 'sample.module_cleaner.cleanup_log.dry_run'] as $sampleSignal) {
     module_assert(str_contains($providerSource, $sampleSignal), 'Provider must declare sample data signal '.$sampleSignal.'.');
 }
 module_assert(str_contains($providerSource, "! Route::has('admin.module-cleaner.index')"), 'Provider must guard route loading with a sentinel route.');
@@ -98,7 +108,7 @@ module_assert(str_contains($providerSource, "'broom'"), 'Cleaner menu must use t
 module_assert(! str_contains($providerSource, 'settings.module_cleaner'), 'Cleaner must not register as a Settings/Configurations child.');
 
 $routeSource = (string) file_get_contents($root.'/module/routes/web.php');
-foreach (['registry', 'modules.show', 'modules.plan.show', 'modules.backup', 'orphans', 'backups', 'quarantine', 'logs', 'settings', 'settings.update'] as $routeName) {
+foreach (['registry', 'modules.show', 'modules.plan.show', 'modules.backup', 'modules.quarantine', 'orphans', 'backups', 'backups.restore-plan', 'quarantine', 'logs', 'settings', 'settings.update'] as $routeName) {
     module_assert(str_contains($routeSource, "->name('".$routeName."')"), 'Cleaner route map must include '.$routeName.'.');
 }
 
@@ -110,6 +120,13 @@ module_assert(str_contains($planSource, 'AddonModuleRegistry'), 'Cleaner must or
 module_assert(str_contains($planSource, 'purgeModuleResidue'), 'Cleaner dry-runs must use the host purge primitive.');
 module_assert(str_contains($planSource, "'dry_run' => true"), 'Cleaner planning must call host purge with dry_run=true.');
 module_assert(str_contains($planSource, 'ModuleBackupService'), 'Cleaner must create backup evidence before execution.');
+module_assert(str_contains($planSource, 'CleanerPersistenceService'), 'Cleaner plans must persist coordination records.');
+module_assert(str_contains($planSource, 'DependencyGraphService'), 'Cleaner plans must calculate dependency graph evidence.');
+module_assert(str_contains($planSource, 'ModuleQuarantineService'), 'Cleaner plans must expose quarantine evidence creation.');
+module_assert(str_contains($planSource, 'recordPlan'), 'Cleaner dry-run plans must persist a cleanup plan row.');
+module_assert(str_contains($planSource, 'recordBackup'), 'Cleaner backups must persist a backup-set row.');
+module_assert(str_contains($planSource, 'syncOrphanCandidates'), 'Cleaner orphan candidates must persist review records.');
+module_assert(str_contains($planSource, 'recordSelfDestructCheck'), 'Cleaner self-destruct guard must persist check rows.');
 module_assert(str_contains($planSource, "route('admin.settings.addon-modules.modules.purge'"), 'Cleaner execution must hand off to the host purge route.');
 module_assert(str_contains($planSource, "'backup_confirmed' => true"), 'Cleaner execution payload must require backup confirmation.');
 module_assert(str_contains($planSource, 'PROTECTED_MODULE_KEYS'), 'Cleaner planning must protect first-party, generator, and cleaner keys.');
@@ -135,6 +152,25 @@ foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_f
     module_assert(str_contains($auditSource, $column), 'Audit logger must write '.$column.'.');
 }
 
+$persistenceSource = (string) file_get_contents($root.'/module/src/Support/CleanerPersistenceService.php');
+foreach (['module_cleaner_cleanup_plans', 'module_cleaner_backup_sets', 'module_cleaner_quarantine_items', 'module_cleaner_orphan_candidates', 'module_cleaner_dependency_edges', 'module_cleaner_self_destruct_checks'] as $table) {
+    module_assert(str_contains($persistenceSource, $table), 'Persistence service must write/read '.$table.'.');
+}
+module_assert(str_contains($persistenceSource, 'prepareRestorePlan'), 'Persistence service must prepare restore-plan payloads.');
+
+$dependencySource = (string) file_get_contents($root.'/module/src/Support/DependencyGraphService.php');
+foreach (['graphFor', 'selfDestructCheck', 'has_blocking_dependencies', 'dependent_modules'] as $needle) {
+    module_assert(str_contains($dependencySource, $needle), 'Dependency graph service must expose '.$needle.'.');
+}
+
+$quarantineSource = (string) file_get_contents($root.'/module/src/Support/ModuleQuarantineService.php');
+foreach (['copyDirectory', 'recordQuarantineItem', 'quarantine_manifest.json'] as $needle) {
+    module_assert(str_contains($quarantineSource, $needle), 'Quarantine service must copy and record evidence signal '.$needle.'.');
+}
+foreach (['File::delete', 'Storage::delete', 'unlink(', 'deleteDirectory'] as $forbidden) {
+    module_assert(! str_contains($quarantineSource, $forbidden), 'Quarantine service must not delete source data directly: '.$forbidden);
+}
+
 $backupSource = (string) file_get_contents($root.'/module/src/Support/ModuleBackupService.php');
 foreach (['ownership_snapshot.json', 'inventory.json', 'permission_rows.json', 'role_permission_rows.json', 'restore_notes.md'] as $needle) {
     module_assert(str_contains($backupSource, $needle), 'Backup service must write '.$needle.'.');
@@ -156,11 +192,17 @@ foreach ($expectedSettings as $settingKey) {
     module_assert(str_contains($settingsSource, $settingKey), 'Settings catalog must include '.$settingKey.'.');
 }
 
-$migrationSource = (string) file_get_contents($root.'/module/database/migrations/2026_06_13_020000_create_module_cleaner_cleanup_logs_table.php');
+$migrationSource = '';
+foreach (module_files($root.'/module/database/migrations') as $migrationFile) {
+    $migrationSource .= (string) file_get_contents($migrationFile)."\n";
+}
 module_assert(! str_contains($migrationSource, '->constrained('), 'Cleaner migrations must not hard-link to host tables.');
 module_assert(! str_contains($migrationSource, "Schema::table('users'"), 'Cleaner migrations must never touch users.');
 foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_files_planned'] as $column) {
     module_assert(str_contains($migrationSource, $column), 'Cleanup log migration must include '.$column.'.');
+}
+foreach (['module_cleaner_cleanup_plans', 'module_cleaner_backup_sets', 'module_cleaner_quarantine_items', 'module_cleaner_orphan_candidates', 'module_cleaner_dependency_edges', 'module_cleaner_self_destruct_checks'] as $table) {
+    module_assert(str_contains($migrationSource, $table), 'Cleaner coordination migration must create '.$table.'.');
 }
 
 $viewSource = '';
@@ -186,6 +228,11 @@ module_assert(! str_contains($viewSource, 'responsive-definition-list'), 'Cleane
 module_assert(str_contains($viewSource, 'v1 ownership snapshot'), 'Cleaner UI must use v1 ownership snapshot wording.');
 module_assert(str_contains($viewSource, 'module_cleaner.purge'), 'Cleaner UI must expose the reserved purge permission boundary.');
 module_assert(str_contains($viewSource, "\$entry['protected']"), 'Cleaner UI must disable plans for protected modules.');
+module_assert(str_contains($viewSource, 'admin.module-cleaner.modules.quarantine'), 'Cleaner UI must expose a quarantine evidence action.');
+module_assert(str_contains($viewSource, 'admin.module-cleaner.backups.restore-plan'), 'Cleaner UI must expose a restore-plan preparation action.');
+module_assert(str_contains($viewSource, 'backupRows'), 'Cleaner backup UI must render persisted backup-set rows.');
+module_assert(str_contains($viewSource, 'quarantineRows'), 'Cleaner quarantine UI must render persisted quarantine rows.');
+module_assert(str_contains($viewSource, 'quarantine_confirmed'), 'Cleaner UI must explicitly distinguish quarantine evidence from deletion.');
 module_assert(str_contains($viewSource, 'surface_breakdown'), 'Cleaner registry must hide residue counts behind a row disclosure.');
 module_assert(str_contains($viewSource, "dashboard.packages"), 'Cleaner dashboard must include package stat cards.');
 foreach (['Module Registry', 'Dry-Run Cleanup Plan', 'Orphan Tables', 'Backups', 'Quarantine', 'Cleanup Logs', 'Cleaner Settings'] as $label) {

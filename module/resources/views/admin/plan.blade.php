@@ -15,6 +15,7 @@
 
         @php
             $module = $entry['module'];
+            $quarantine = session('module_cleaner_quarantine');
         @endphp
 
         <x-card :title="$module->name" :description="__('module_cleaner::messages.plan.guard')">
@@ -87,6 +88,26 @@
                                     {{ __('module_cleaner::messages.plan.create_backup') }}
                                 </x-button>
                             </form>
+                        @endif
+                    </div>
+
+                    <div class="settings-control-card">
+                        <h3>{{ __('module_cleaner::messages.plan.quarantine_title') }}</h3>
+                        <p class="form-help">{{ __('module_cleaner::messages.plan.quarantine_body') }}</p>
+                        @if ($quarantine)
+                            <div class="pill-list">
+                                <span class="pill success">{{ __('module_cleaner::messages.plan.quarantine_confirmed') }}</span>
+                                <span class="pill info">{{ $quarantine['relative_path'] ?? '' }}</span>
+                            </div>
+                        @elseif ($backup)
+                            <form method="POST" action="{{ route('admin.module-cleaner.modules.quarantine', $module) }}">
+                                @csrf
+                                <x-button type="submit" icon="archive">
+                                    {{ __('module_cleaner::messages.plan.create_quarantine') }}
+                                </x-button>
+                            </form>
+                        @else
+                            <x-empty-state :description="__('module_cleaner::messages.plan.backup_required')" />
                         @endif
                     </div>
 
