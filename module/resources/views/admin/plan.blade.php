@@ -72,7 +72,7 @@
                     </table>
                 </div>
 
-                <div class="form-grid two">
+                <div class="form-grid four">
                     <div class="settings-control-card">
                         <h3>{{ __('module_cleaner::messages.plan.backup_title') }}</h3>
                         <p class="form-help">{{ __('module_cleaner::messages.plan.backup_body') }}</p>

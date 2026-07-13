@@ -37,8 +37,7 @@
                         {{ __('module_cleaner::messages.registry.dry_run') }}
                     </x-button>
                 </form>
-                <x-button :href="route('admin.module-cleaner.registry')" variant="secondary" icon="arrow-left">{{ __('module_cleaner::messages.sections.registry') }}</x-button>
-            </div>
+                <x-page-actions :actions="[['label' => __('module_cleaner::messages.sections.registry'), 'route' => route('admin.module-cleaner.registry'), 'icon' => 'arrow-left']]" /></div>
         </x-card>
 
         <x-card :title="__('module_cleaner::messages.details.tables')">
@@ -56,7 +55,7 @@
             </div>
         </x-card>
 
-        <div class="form-grid two">
+        <div class="form-grid four">
             <x-card :title="__('module_cleaner::messages.details.settings')">
                 <div class="pill-list">
                     @forelse ($entry['settings'] as $setting)
@@ -88,7 +87,7 @@
             </div>
         </x-card>
 
-        <div class="form-grid two">
+        <div class="form-grid four">
             <x-card :title="__('module_cleaner::messages.details.storage')">
                 <div class="pill-list">
                     @forelse ($entry['storage'] as $storage)

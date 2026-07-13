@@ -14,7 +14,7 @@
             @csrf
 
             <div class="stack">
-                <div class="form-grid two">
+                <div class="form-grid four">
                     <x-card :title="__('module_cleaner::messages.settings.safety')">
                         <p class="form-help">{{ __('module_cleaner::messages.plan.guard') }}</p>
                         <p class="form-help">module_cleaner.purge is required for backup creation and host purge handoff.</p>
@@ -64,7 +64,7 @@
                 </div>
 
                 <x-card :title="__('module_cleaner::messages.settings.notifications')">
-                    <div class="form-grid two">
+                    <div class="form-grid four">
                         <label class="choice-row">
                             <input type="checkbox" name="email_on_cleanup" value="1" @checked($defaults['email_on_cleanup'])>
                             <span>{{ __('module_cleaner::messages.settings.email_on_cleanup') }}</span>
