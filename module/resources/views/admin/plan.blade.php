@@ -125,9 +125,11 @@
                                     <span>{{ __('module_cleaner::messages.plan.confirm_module_key') }}</span>
                                     <input type="text" name="confirm_module_key" value="" placeholder="{{ $execution['confirm_module_key'] ?? $module->key }}" required>
                                 </label>
-                                <x-button type="submit" variant="danger" icon="trash">
-                                    {{ __('module_cleaner::messages.plan.execute_host_purge') }}
-                                </x-button>
+                                <div class="form-actions">
+                                    <x-button type="submit" variant="danger" icon="trash">
+                                        {{ __('module_cleaner::messages.plan.execute_host_purge') }}
+                                    </x-button>
+                                </div>
                             </form>
                         @else
                             <x-empty-state :description="__('module_cleaner::messages.plan.backup_required')" />
