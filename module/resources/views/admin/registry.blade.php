@@ -63,7 +63,7 @@
                                         </details>
                                     </td>
                                     <td data-label="{{ __('module_cleaner::messages.registry.actions') }}">
-                                        <div class="form-actions">
+                                        <div class="table-action-list">
                                             <x-button :href="route('admin.module-cleaner.modules.show', $module)" variant="secondary" icon="eye">
                                                 {{ __('module_cleaner::messages.registry.details') }}
                                             </x-button>
