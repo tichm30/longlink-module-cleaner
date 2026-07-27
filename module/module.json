@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0u-CX",
+    "version": "0.1.0v-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -165,8 +165,9 @@
             "module_cleaner_self_destruct_checks"
         ]
     },
-    "requires_host_min_version": "0.7.12y-CX",
+    "requires_host_min_version": "0.7.34l-CX",
     "notes": [
+        "0.1.0v-CX moves the registry listing to the host list-toolbar/data-table-pagination primitives, adds server-side registry search and pagination, and keeps the table's primary module label human-friendly by removing the visible module key from registry rows.",
         "0.1.0s-CX applies the global UI presentation sweep: standard content grids, mobile-card tables, component-backed cards, metric cards, and page-action back navigation.",
         "0.1.0r-CX adds owned persistence for cleanup plans, backup sets, quarantine items, orphan candidates, dependency edges, and self-destruct checks; dry-runs now record dependency/orphan/self-destruct evidence, backups record restore-plan metadata, and quarantine copies module files/storage/packages into Cleaner-owned quarantine without deleting source data.",
         "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",

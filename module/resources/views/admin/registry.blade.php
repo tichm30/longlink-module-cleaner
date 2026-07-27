@@ -11,11 +11,33 @@
         @endif
 
         <x-card :title="__('module_cleaner::messages.registry.title')">
-            @if ($modules === [])
+            <x-list-toolbar :action="route('admin.module-cleaner.registry')" data-listing-toolbar="module-cleaner-registry">
+                <x-slot:search>
+                    <label class="field is-compact" for="module-cleaner-registry-search">
+                        <span class="field-label">{{ __('module_cleaner::messages.registry.search') }}</span>
+                        <input
+                            id="module-cleaner-registry-search"
+                            class="input"
+                            type="search"
+                            name="q"
+                            value="{{ $moduleSearch }}"
+                            placeholder="{{ __('module_cleaner::messages.registry.search_placeholder') }}"
+                            autocomplete="off"
+                        >
+                    </label>
+                </x-slot:search>
+                <x-slot:actions>
+                    <x-button type="submit" variant="secondary" size="compact" icon="search">
+                        {{ __('module_cleaner::messages.registry.search_action') }}
+                    </x-button>
+                </x-slot:actions>
+            </x-list-toolbar>
+
+            @if ($modules->isEmpty())
                 <x-empty-state :description="__('module_cleaner::messages.registry.empty')" />
             @else
                 <div class="data-table-wrap is-card-table">
-                    <table class="data-table is-mobile-card-table">
+                    <table class="data-table is-mobile-card-table" data-listing-table="module-cleaner-registry">
                         <thead>
                             <tr>
                                 <th>{{ __('module_cleaner::messages.registry.module') }}</th>
@@ -32,7 +54,6 @@
                                 @endphp
                                 <tr>
                                     <td data-label="{{ __('module_cleaner::messages.registry.module') }}">
-                                        <span class="eyebrow">{{ $module->key }}</span>
                                         <strong>{{ $module->name }}</strong>
                                         <p>{{ $module->description ?: 'No description supplied.' }}</p>
                                     </td>
@@ -80,6 +101,11 @@
                         </tbody>
                     </table>
                 </div>
+                <x-data-table-pagination
+                    :paginator="$modules"
+                    :label="__('module_cleaner::messages.registry.pagination')"
+                    data-listing-pagination="module-cleaner-registry"
+                />
             @endif
         </x-card>
     </x-settings-category-layout>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 $tests = [
     $root.'/tests/Architecture/ModuleStandaloneStructureTest.php',
+    $root.'/tests/Architecture/RegistryListingStandardTest.php',
     $root.'/tests/Feature/CleanerSafetyContractTest.php',
     $root.'/tests/Feature/ModuleReleaseZipTest.php',
 ];

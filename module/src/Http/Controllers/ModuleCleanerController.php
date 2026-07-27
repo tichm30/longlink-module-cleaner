@@ -7,9 +7,11 @@ use App\Models\AddonModule;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Support\Settings\ModuleSettingsPersister;
 use App\Support\Settings\SettingsStore;
@@ -33,10 +35,50 @@ class ModuleCleanerController extends Controller
         ]);
     }
 
-    public function registry(ResidueInventoryService $inventory): View
+    public function registry(Request $request, ResidueInventoryService $inventory): View
     {
+        $moduleSearch = trim((string) $request->query('q', ''));
+        $modules = collect($inventory->modules());
+
+        if ($moduleSearch !== '') {
+            $needle = Str::lower($moduleSearch);
+            $modules = $modules
+                ->filter(function (array $entry) use ($needle): bool {
+                    $module = $entry['module'] ?? null;
+                    $summary = $entry['summary'] ?? [];
+                    $haystack = Str::lower(collect([
+                        data_get($module, 'name'),
+                        data_get($module, 'description'),
+                        data_get($module, 'status'),
+                        $entry['protected_reason'] ?? null,
+                        $summary['tables'] ?? null,
+                        $summary['settings'] ?? null,
+                        $summary['permissions'] ?? null,
+                        $summary['storage_paths'] ?? null,
+                        $summary['packages'] ?? null,
+                    ])->filter(fn ($value): bool => $value !== null && $value !== '')->implode(' '));
+
+                    return Str::contains($haystack, $needle);
+                })
+                ->values();
+        }
+
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 25;
+        $modulePage = new LengthAwarePaginator(
+            $modules->forPage($page, $perPage)->values(),
+            $modules->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ],
+        );
+
         return view('module_cleaner::admin.registry', $this->viewData('registry') + [
-            'modules' => $inventory->modules(),
+            'modules' => $modulePage,
+            'moduleSearch' => $moduleSearch,
         ]);
     }
 
