@@ -13,24 +13,14 @@
         <x-card :title="__('module_cleaner::messages.registry.title')">
             <x-list-toolbar :action="route('admin.module-cleaner.registry')" data-listing-toolbar="module-cleaner-registry">
                 <x-slot:search>
-                    <label class="field is-compact" for="module-cleaner-registry-search">
-                        <span class="field-label">{{ __('module_cleaner::messages.registry.search') }}</span>
-                        <input
-                            id="module-cleaner-registry-search"
-                            class="input"
-                            type="search"
-                            name="q"
-                            value="{{ $moduleSearch }}"
-                            placeholder="{{ __('module_cleaner::messages.registry.search_placeholder') }}"
-                            autocomplete="off"
-                        >
-                    </label>
+                    <x-search-field
+                        id="module-cleaner-registry-search"
+                        name="q"
+                        :label="__('module_cleaner::messages.registry.search')"
+                        :value="$moduleSearch"
+                        :placeholder="__('module_cleaner::messages.registry.search_placeholder')"
+                    />
                 </x-slot:search>
-                <x-slot:actions>
-                    <x-button type="submit" variant="secondary" size="compact" icon="search">
-                        {{ __('module_cleaner::messages.registry.search_action') }}
-                    </x-button>
-                </x-slot:actions>
             </x-list-toolbar>
 
             @if ($modules->isEmpty())
