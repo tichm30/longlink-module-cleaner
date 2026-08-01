@@ -30,18 +30,15 @@
                     <x-card :title="__('module_cleaner::messages.settings.automation')">
                         <div class="form-grid single">
                             <label class="field">
-                                <span>{{ __('module_cleaner::messages.settings.backup_retention') }}</span>
-                                <input type="number" name="backup_retention_days" value="{{ old('backup_retention_days', $defaults['backup_retention_days']) }}" min="0" max="3650">
+                                <x-form.measured-input name="backup_retention_days" min="0" max="3650" :label="__('module_cleaner::messages.settings.backup_retention')" :value="old('backup_retention_days', $defaults['backup_retention_days'])" :unit="__('module_cleaner::messages.units.days')" />
                                 @error('backup_retention_days')<span class="form-error">{{ $message }}</span>@enderror
                             </label>
                             <label class="field">
-                                <span>{{ __('module_cleaner::messages.settings.log_retention') }}</span>
-                                <input type="number" name="log_retention_days" value="{{ old('log_retention_days', $defaults['log_retention_days']) }}" min="0" max="3650">
+                                <x-form.measured-input name="log_retention_days" min="0" max="3650" :label="__('module_cleaner::messages.settings.log_retention')" :value="old('log_retention_days', $defaults['log_retention_days'])" :unit="__('module_cleaner::messages.units.days')" />
                                 @error('log_retention_days')<span class="form-error">{{ $message }}</span>@enderror
                             </label>
                             <label class="field">
-                                <span>{{ __('module_cleaner::messages.settings.quarantine_retention') }}</span>
-                                <input type="number" name="quarantine_retention_days" value="{{ old('quarantine_retention_days', $defaults['quarantine_retention_days']) }}" min="0" max="3650">
+                                <x-form.measured-input name="quarantine_retention_days" min="0" max="3650" :label="__('module_cleaner::messages.settings.quarantine_retention')" :value="old('quarantine_retention_days', $defaults['quarantine_retention_days'])" :unit="__('module_cleaner::messages.units.days')" />
                                 @error('quarantine_retention_days')<span class="form-error">{{ $message }}</span>@enderror
                             </label>
                         </div>

@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'units' => [
+        'days' => 'Days',
+    ],
     'navigation' => [
         'cleaner' => 'Module Cleaner',
     ],

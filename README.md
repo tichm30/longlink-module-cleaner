@@ -1,4 +1,8 @@
-Current package version: `0.1.0x-CX`.
+Current package version: `0.1.0y-CX`.
+
+## 0.1.0y-CX
+
+- Routes retention-day settings through the host measured-input primitive with explicit day disclosure.
 
 The Longlink Module Cleaner addon module. Source of truth for the safe-removal tool that uninstalls addon modules **completely** — no orphan database tables, no orphan files, no orphan settings/permissions — with backups, quarantine, dependency checks, and a full audit trail.
 

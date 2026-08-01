@@ -95,6 +95,12 @@ foreach ([
     module_assert(is_file($root.'/'.$requiredPath), $requiredPath.' must be present.');
 }
 
+$settingsViewSource = (string) file_get_contents($root.'/module/resources/views/admin/settings.blade.php');
+foreach (['backup_retention_days', 'log_retention_days', 'quarantine_retention_days'] as $retentionField) {
+    module_assert(str_contains($settingsViewSource, 'x-form.measured-input name="'.$retentionField.'"'), 'Cleaner '.$retentionField.' must use the host measured-input primitive.');
+}
+module_assert(str_contains($settingsViewSource, 'module_cleaner::messages.units.days'), 'Cleaner retention settings must disclose days as the unit.');
+
 $providerSource = (string) file_get_contents($root.'/module/src/ModuleCleanerModuleProvider.php');
 module_assert(str_contains($providerSource, 'extends AbstractModuleRuntimeProvider'), 'Provider must inherit the host base provider.');
 module_assert(str_contains($providerSource, 'implements SampleDataProviderContract'), 'Provider must implement the host sample data provider contract.');
