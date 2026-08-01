@@ -19,26 +19,11 @@
                         <p class="form-help">{{ __('module_cleaner::messages.plan.guard') }}</p>
                         <p class="form-help">module_cleaner.purge is required for backup creation and host purge handoff.</p>
                         <div class="stack">
-                            <label class="choice-row">
-                                <input type="checkbox" name="require_backup" value="1" @checked($defaults['require_backup'])>
-                                <span>{{ __('module_cleaner::messages.settings.require_backup') }}</span>
-                            </label>
-                            <label class="choice-row">
-                                <input type="checkbox" name="require_typed_confirmation" value="1" @checked($defaults['require_typed_confirmation'])>
-                                <span>{{ __('module_cleaner::messages.settings.typed_confirmation') }}</span>
-                            </label>
-                            <label class="choice-row">
-                                <input type="checkbox" name="allow_dry_run" value="1" @checked($defaults['allow_dry_run'])>
-                                <span>{{ __('module_cleaner::messages.settings.allow_dry_run') }}</span>
-                            </label>
-                            <label class="choice-row">
-                                <input type="checkbox" name="block_dependents" value="1" @checked($defaults['block_dependents'])>
-                                <span>{{ __('module_cleaner::messages.settings.block_dependents') }}</span>
-                            </label>
-                            <label class="choice-row">
-                                <input type="checkbox" name="enable_orphan_detection" value="1" @checked($defaults['enable_orphan_detection'])>
-                                <span>{{ __('module_cleaner::messages.settings.orphan_detection') }}</span>
-                            </label>
+                            <x-form.checkbox name="require_backup" :label="__('module_cleaner::messages.settings.require_backup')" :checked="$defaults['require_backup']" />
+                            <x-form.checkbox name="require_typed_confirmation" :label="__('module_cleaner::messages.settings.typed_confirmation')" :checked="$defaults['require_typed_confirmation']" />
+                            <x-form.checkbox name="allow_dry_run" :label="__('module_cleaner::messages.settings.allow_dry_run')" :checked="$defaults['allow_dry_run']" />
+                            <x-form.checkbox name="block_dependents" :label="__('module_cleaner::messages.settings.block_dependents')" :checked="$defaults['block_dependents']" />
+                            <x-form.checkbox name="enable_orphan_detection" :label="__('module_cleaner::messages.settings.orphan_detection')" :checked="$defaults['enable_orphan_detection']" />
                         </div>
                     </x-card>
 
@@ -65,10 +50,7 @@
 
                 <x-card :title="__('module_cleaner::messages.settings.notifications')">
                     <div class="form-grid four">
-                        <label class="choice-row">
-                            <input type="checkbox" name="email_on_cleanup" value="1" @checked($defaults['email_on_cleanup'])>
-                            <span>{{ __('module_cleaner::messages.settings.email_on_cleanup') }}</span>
-                        </label>
+                        <x-form.checkbox name="email_on_cleanup" :label="__('module_cleaner::messages.settings.email_on_cleanup')" :checked="$defaults['email_on_cleanup']" />
                         <label class="field">
                             <span>{{ __('module_cleaner::messages.settings.slack_webhook') }}</span>
                             <input type="url" name="slack_webhook_url" value="{{ old('slack_webhook_url', $defaults['slack_webhook_url']) }}" placeholder="https://hooks.slack.com/services/...">
