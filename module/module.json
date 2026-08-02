@@ -165,9 +165,10 @@
             "module_cleaner_self_destruct_checks"
         ]
     },
-    "requires_host_min_version": "0.7.34l-CX",
+    "requires_host_min_version": "0.7.40a-CX",
     "notes": [
-    "0.1.0z-CX classifies Module Cleaner confirmation module key controls as reference keys for the host generated-key gate.",
+        "0.1.0z-CX classifies Module Cleaner confirmation module key controls as reference keys for the host generated-key gate.",
+        "0.1.0z-CX declares the canonical longlink.module_entitlement.v1 contract for License Agent entitlement gates.",
         "0.1.0y-CX routes Module Cleaner retention-day settings through host measured-input primitives.",
         "0.1.0x-CX migrates Module Cleaner settings checkbox controls to the host x-form.checkbox component.",
         "0.1.0w-CX Module Cleaner registry search now uses the host x-search-field primitive with left icon, clear action, and live list-toolbar markers.",
@@ -191,7 +192,8 @@
         "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ],
     "release_notes": [
-    "0.1.0z-CX declares Module Cleaner confirmation module key controls as references.",
+        "0.1.0z-CX declares Module Cleaner confirmation module key controls as references.",
+        "0.1.0z-CX replaces the retired licensing manifest block with longlink.module_entitlement.v1.",
         "0.1.0y-CX routes Module Cleaner retention-day settings through host measured-input primitives.",
         "0.1.0x-CX migrates Module Cleaner settings checkbox controls to the host x-form.checkbox component.",
         "0.1.0w-CX Module Cleaner registry search now uses the host x-search-field primitive with left icon, clear action, and live list-toolbar markers.",
@@ -199,5 +201,26 @@
         "0.1.0r-CX persists Cleaner plan/backup/quarantine/orphan/dependency/self-destruct coordination records and adds restore-plan preparation.",
         "0.1.0q-CX adds a Gate 14 SampleDataProviderContract implementation for Cleaner cleanup-log demos and requires host 0.7.12y-CX.",
         "0.1.0p-CX migrates settings secondary sidebars to the host x-secondary-sidebar-nav component and requires host 0.7.12w-CX."
-    ]
+    ],
+    "longlink.module_entitlement.v1": {
+        "required": true,
+        "product_key": "longlink.module.module_cleaner",
+        "entitlements": {
+            "deploy": "module.module_cleaner.deploy",
+            "runtime": "module.module_cleaner.runtime",
+            "updates": "module.module_cleaner.updates"
+        },
+        "tenant_scope": "tenant",
+        "default_restriction_mode": "read_only",
+        "features": [],
+        "recovery_surfaces": [
+            "license_status",
+            "support",
+            "backup",
+            "data_export",
+            "deactivate",
+            "uninstall",
+            "documentation"
+        ]
+    }
 }
