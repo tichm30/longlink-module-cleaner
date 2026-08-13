@@ -1,4 +1,8 @@
-Current package version: `0.1.0y-CX`.
+## 0.1.0z-CX
+
+- Classifies Module Cleaner confirmation module key controls as references for the host generated-key gate.
+
+Current package version: `0.1.0z-CX`.
 
 ## 0.1.0y-CX
 

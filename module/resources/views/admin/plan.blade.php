@@ -123,7 +123,7 @@
                                 @endforeach
                                 <label class="field">
                                     <span>{{ __('module_cleaner::messages.plan.confirm_module_key') }}</span>
-                                    <input type="text" name="confirm_module_key" value="" placeholder="{{ $execution['confirm_module_key'] ?? $module->key }}" required>
+                                    <input type="text" name="confirm_module_key" key-behaviour="reference" value="" placeholder="{{ $execution['confirm_module_key'] ?? $module->key }}" required>
                                 </label>
                                 <div class="form-actions">
                                     <x-button type="submit" variant="danger" icon="trash">

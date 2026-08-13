@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.0y-CX",
+    "version": "0.1.0z-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -167,6 +167,7 @@
     },
     "requires_host_min_version": "0.7.34l-CX",
     "notes": [
+    "0.1.0z-CX classifies Module Cleaner confirmation module key controls as reference keys for the host generated-key gate.",
         "0.1.0y-CX routes Module Cleaner retention-day settings through host measured-input primitives.",
         "0.1.0x-CX migrates Module Cleaner settings checkbox controls to the host x-form.checkbox component.",
         "0.1.0w-CX Module Cleaner registry search now uses the host x-search-field primitive with left icon, clear action, and live list-toolbar markers.",
@@ -190,6 +191,7 @@
         "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ],
     "release_notes": [
+    "0.1.0z-CX declares Module Cleaner confirmation module key controls as references.",
         "0.1.0y-CX routes Module Cleaner retention-day settings through host measured-input primitives.",
         "0.1.0x-CX migrates Module Cleaner settings checkbox controls to the host x-form.checkbox component.",
         "0.1.0w-CX Module Cleaner registry search now uses the host x-search-field primitive with left icon, clear action, and live list-toolbar markers.",
