@@ -160,6 +160,7 @@ return [
         'slack_webhook' => 'Slack Webhook URL',
         'save' => 'Save Settings',
         'saved' => 'Module Cleaner settings saved.',
+        'restore_confirm' => 'Restore all Module Cleaner settings to their default values?',
         'definitions' => [
             'require_backup' => [
                 'label' => 'Require Backup Before Cleanup',

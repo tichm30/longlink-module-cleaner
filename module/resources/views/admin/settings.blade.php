@@ -56,9 +56,11 @@
                     </div>
                 </x-card>
 
-                <div class="form-actions">
-                    <x-button type="submit" icon="save">{{ __('module_cleaner::messages.settings.save') }}</x-button>
-                </div>
+                @include('admin.settings.partials.form-actions', [
+                    'restoreRoute' => 'admin.modules.settings.restore-defaults',
+                    'restoreRouteParameters' => ['module' => 'module_cleaner'],
+                    'restoreConfirm' => __('module_cleaner::messages.settings.restore_confirm'),
+                ])
             </div>
         </form>
     </x-settings-category-layout>
