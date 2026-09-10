@@ -30,6 +30,12 @@ mkdir -p "$ZIP_ROOT"
 rm -f "releases/${ZIP_NAME}" "releases/${ZIP_NAME}.sha256"
 
 cp -R module/. "$ZIP_ROOT/"
+cp -R tests packaging "$ZIP_ROOT/"
+for support in composer.json README.md .github; do
+    if [ -e "$support" ]; then
+        cp -R "$support" "$ZIP_ROOT/"
+    fi
+done
 
 # Hygiene exclusions (mirrors the host's release builder)
 (

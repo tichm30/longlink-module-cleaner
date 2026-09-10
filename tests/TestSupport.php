@@ -26,7 +26,7 @@ function module_assert_same(mixed $expected, mixed $actual, string $message): vo
  */
 function module_manifest(): array
 {
-    $path = module_repo_root().'/module/module.json';
+    $path = module_source_root().'/module.json';
     module_assert(is_file($path), 'module/module.json must exist.');
 
     $payload = json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
@@ -56,4 +56,22 @@ function module_files(string $directory): array
     sort($files);
 
     return $files;
+}
+
+function module_source_root(): string
+{
+    $root = module_repo_root();
+    $source = is_file($root.'/module.json') ? $root : $root.'/module';
+    module_assert(is_file($source.'/module.json'), 'Module manifest is missing.');
+
+    return $source;
+}
+
+function module_path(string $path): string
+{
+    $path = ltrim($path, '/');
+
+    return str_starts_with($path, 'module/')
+        ? module_source_root().'/'.substr($path, strlen('module/'))
+        : module_repo_root().'/'.$path;
 }

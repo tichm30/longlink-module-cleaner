@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__).'/TestSupport.php';
 
+return static function (): void {
+
 $root = module_repo_root();
 $manifest = module_manifest();
 
@@ -62,7 +64,7 @@ module_assert_same($expectedMigrations, $manifest['database_migrations'] ?? null
 
 $migrationFiles = array_map(
     static fn (string $path): string => basename($path, '.php'),
-    module_files($root.'/module/database/migrations'),
+    module_files(module_source_root().'/database/migrations'),
 );
 
 module_assert_same($expectedMigrations, $migrationFiles, 'module/database/migrations must contain exactly the declared migrations.');
@@ -92,16 +94,16 @@ foreach ([
     'module/resources/views/admin/partials/section-nav.blade.php',
     'module/resources/lang/en/messages.php',
 ] as $requiredPath) {
-    module_assert(is_file($root.'/'.$requiredPath), $requiredPath.' must be present.');
+    module_assert(is_file(module_path($requiredPath)), $requiredPath.' must be present.');
 }
 
-$settingsViewSource = (string) file_get_contents($root.'/module/resources/views/admin/settings.blade.php');
+$settingsViewSource = (string) file_get_contents(module_source_root().'/resources/views/admin/settings.blade.php');
 foreach (['backup_retention_days', 'log_retention_days', 'quarantine_retention_days'] as $retentionField) {
     module_assert(str_contains($settingsViewSource, 'x-form.measured-input name="'.$retentionField.'"'), 'Cleaner '.$retentionField.' must use the host measured-input primitive.');
 }
 module_assert(str_contains($settingsViewSource, 'module_cleaner::messages.units.days'), 'Cleaner retention settings must disclose days as the unit.');
 
-$providerSource = (string) file_get_contents($root.'/module/src/ModuleCleanerModuleProvider.php');
+$providerSource = (string) file_get_contents(module_source_root().'/src/ModuleCleanerModuleProvider.php');
 module_assert(str_contains($providerSource, 'extends AbstractModuleRuntimeProvider'), 'Provider must inherit the host base provider.');
 module_assert(str_contains($providerSource, 'implements SampleDataProviderContract'), 'Provider must implement the host sample data provider contract.');
 module_assert(str_contains($providerSource, 'use SeedsSampleDataTables'), 'Provider must use the shared host sample data table seeding helper.');
@@ -113,15 +115,15 @@ module_assert(str_contains($providerSource, 'platform_tools.module_cleaner'), 'C
 module_assert(str_contains($providerSource, "'broom'"), 'Cleaner menu must use the semantic broom icon.');
 module_assert(! str_contains($providerSource, 'settings.module_cleaner'), 'Cleaner must not register as a Settings/Configurations child.');
 
-$routeSource = (string) file_get_contents($root.'/module/routes/web.php');
+$routeSource = (string) file_get_contents(module_source_root().'/routes/web.php');
 foreach (['registry', 'modules.show', 'modules.plan.show', 'modules.backup', 'modules.quarantine', 'orphans', 'backups', 'backups.restore-plan', 'quarantine', 'logs', 'settings', 'settings.update'] as $routeName) {
     module_assert(str_contains($routeSource, "->name('".$routeName."')"), 'Cleaner route map must include '.$routeName.'.');
 }
 
-$controllerSource = (string) file_get_contents($root.'/module/src/Http/Controllers/ModuleCleanerController.php');
+$controllerSource = (string) file_get_contents(module_source_root().'/src/Http/Controllers/ModuleCleanerController.php');
 module_assert(! str_contains($controllerSource, "['key' => 'plan'"), 'Cleaner section navigation must not show a duplicate Cleanup Plans link.');
 
-$planSource = (string) file_get_contents($root.'/module/src/Support/CleanupPlanService.php');
+$planSource = (string) file_get_contents(module_source_root().'/src/Support/CleanupPlanService.php');
 module_assert(str_contains($planSource, 'AddonModuleRegistry'), 'Cleaner must orchestrate through the host registry.');
 module_assert(str_contains($planSource, 'purgeModuleResidue'), 'Cleaner dry-runs must use the host purge primitive.');
 module_assert(str_contains($planSource, "'dry_run' => true"), 'Cleaner planning must call host purge with dry_run=true.');
@@ -141,7 +143,7 @@ module_assert(str_contains($planSource, 'module_cleaner'), 'Cleaner must protect
 module_assert(! str_contains($planSource, 'Schema::drop'), 'Cleaner must not drop tables directly.');
 module_assert(! str_contains($planSource, 'deleteDirectory'), 'Cleaner must not delete directories directly.');
 
-$inventorySource = (string) file_get_contents($root.'/module/src/Support/ResidueInventoryService.php');
+$inventorySource = (string) file_get_contents(module_source_root().'/src/Support/ResidueInventoryService.php');
 module_assert(str_contains($inventorySource, 'ownership_snapshot'), 'Cleaner inventory must be snapshot-first.');
 module_assert(str_contains($inventorySource, "'protected' => \$protected"), 'Cleaner inventory must expose protected rows to the UI.');
 module_assert(str_contains($inventorySource, 'packageInventory'), 'Cleaner inventory must include package residue details.');
@@ -153,23 +155,23 @@ module_assert(! str_contains($inventorySource, 'COUNT(*) as rows'), 'Cleaner pac
 module_assert(! str_contains($inventorySource, 'SUM(file_size_bytes), 0) as bytes'), 'Cleaner package inventory must not use reserved/ambiguous alias bytes.');
 module_assert(! str_contains($inventorySource, 'Schema::drop'), 'Inventory must never drop tables.');
 
-$auditSource = (string) file_get_contents($root.'/module/src/Support/CleanerAuditLogger.php');
+$auditSource = (string) file_get_contents(module_source_root().'/src/Support/CleanerAuditLogger.php');
 foreach (['navigation_planned', 'storage_planned', 'packages_planned', 'module_files_planned'] as $column) {
     module_assert(str_contains($auditSource, $column), 'Audit logger must write '.$column.'.');
 }
 
-$persistenceSource = (string) file_get_contents($root.'/module/src/Support/CleanerPersistenceService.php');
+$persistenceSource = (string) file_get_contents(module_source_root().'/src/Support/CleanerPersistenceService.php');
 foreach (['module_cleaner_cleanup_plans', 'module_cleaner_backup_sets', 'module_cleaner_quarantine_items', 'module_cleaner_orphan_candidates', 'module_cleaner_dependency_edges', 'module_cleaner_self_destruct_checks'] as $table) {
     module_assert(str_contains($persistenceSource, $table), 'Persistence service must write/read '.$table.'.');
 }
 module_assert(str_contains($persistenceSource, 'prepareRestorePlan'), 'Persistence service must prepare restore-plan payloads.');
 
-$dependencySource = (string) file_get_contents($root.'/module/src/Support/DependencyGraphService.php');
+$dependencySource = (string) file_get_contents(module_source_root().'/src/Support/DependencyGraphService.php');
 foreach (['graphFor', 'selfDestructCheck', 'has_blocking_dependencies', 'dependent_modules'] as $needle) {
     module_assert(str_contains($dependencySource, $needle), 'Dependency graph service must expose '.$needle.'.');
 }
 
-$quarantineSource = (string) file_get_contents($root.'/module/src/Support/ModuleQuarantineService.php');
+$quarantineSource = (string) file_get_contents(module_source_root().'/src/Support/ModuleQuarantineService.php');
 foreach (['copyDirectory', 'recordQuarantineItem', 'quarantine_manifest.json'] as $needle) {
     module_assert(str_contains($quarantineSource, $needle), 'Quarantine service must copy and record evidence signal '.$needle.'.');
 }
@@ -177,7 +179,7 @@ foreach (['File::delete', 'Storage::delete', 'unlink(', 'deleteDirectory'] as $f
     module_assert(! str_contains($quarantineSource, $forbidden), 'Quarantine service must not delete source data directly: '.$forbidden);
 }
 
-$backupSource = (string) file_get_contents($root.'/module/src/Support/ModuleBackupService.php');
+$backupSource = (string) file_get_contents(module_source_root().'/src/Support/ModuleBackupService.php');
 foreach (['ownership_snapshot.json', 'inventory.json', 'permission_rows.json', 'role_permission_rows.json', 'restore_notes.md'] as $needle) {
     module_assert(str_contains($backupSource, $needle), 'Backup service must write '.$needle.'.');
 }
@@ -185,7 +187,7 @@ foreach (['Schema::drop', 'dropIfExists', 'File::delete', 'Storage::delete', 'un
     module_assert(! str_contains($backupSource, $forbidden), 'Backup service must not perform direct destructive operation: '.$forbidden);
 }
 
-$orphanSource = (string) file_get_contents($root.'/module/src/Support/OrphanTableDetector.php');
+$orphanSource = (string) file_get_contents(module_source_root().'/src/Support/OrphanTableDetector.php');
 module_assert(str_contains($orphanSource, 'sqlite_master'), 'Orphan detector must support SQLite table discovery.');
 module_assert(str_contains($orphanSource, 'information_schema.tables'), 'Orphan detector must support MySQL/MariaDB table discovery.');
 module_assert(str_contains($orphanSource, 'pending_review'), 'Orphan detector must mark candidates as review-only.');
@@ -193,13 +195,13 @@ foreach (['Schema::drop', 'dropIfExists', 'DB::statement', 'File::delete', 'Stor
     module_assert(! str_contains($orphanSource, $forbidden), 'Orphan detector must not perform direct destructive operation: '.$forbidden);
 }
 
-$settingsSource = (string) file_get_contents($root.'/module/src/Settings/ModuleCleanerSettingsCatalog.php');
+$settingsSource = (string) file_get_contents(module_source_root().'/src/Settings/ModuleCleanerSettingsCatalog.php');
 foreach ($expectedSettings as $settingKey) {
     module_assert(str_contains($settingsSource, $settingKey), 'Settings catalog must include '.$settingKey.'.');
 }
 
 $migrationSource = '';
-foreach (module_files($root.'/module/database/migrations') as $migrationFile) {
+foreach (module_files(module_source_root().'/database/migrations') as $migrationFile) {
     $migrationSource .= (string) file_get_contents($migrationFile)."\n";
 }
 module_assert(! str_contains($migrationSource, '->constrained('), 'Cleaner migrations must not hard-link to host tables.');
@@ -212,7 +214,7 @@ foreach (['module_cleaner_cleanup_plans', 'module_cleaner_backup_sets', 'module_
 }
 
 $viewSource = '';
-foreach (module_files($root.'/module/resources/views/admin') as $viewFile) {
+foreach (module_files(module_source_root().'/resources/views/admin') as $viewFile) {
     $viewSource .= (string) file_get_contents($viewFile)."\n";
 }
 module_assert(str_contains($viewSource, '<x-layouts.app-shell'), 'Cleaner UI must use the host app shell.');
@@ -245,7 +247,7 @@ foreach (['Module Registry', 'Dry-Run Cleanup Plan', 'Orphan Tables', 'Backups',
     module_assert(str_contains($viewSource, $label) || str_contains($viewSource, 'module_cleaner::messages'), 'Cleaner UI must expose '.$label.'.');
 }
 
-foreach (module_files($root.'/module/src') as $phpFile) {
+foreach (module_files(module_source_root().'/src') as $phpFile) {
     if (pathinfo($phpFile, PATHINFO_EXTENSION) !== 'php') {
         continue;
     }
@@ -254,7 +256,7 @@ foreach (module_files($root.'/module/src') as $phpFile) {
     module_assert(str_starts_with($source, "<?php\n\nnamespace Modules\\ModuleCleaner"), $phpFile.' must stay under the Modules\\ModuleCleaner namespace.');
 }
 
-foreach (module_files($root.'/module') as $file) {
+foreach (module_files(module_source_root()) as $file) {
     $relative = substr($file, strlen($root) + 1);
     module_assert(! str_contains($relative, '.DS_Store'), 'macOS metadata must not be present in module/: '.$relative);
     module_assert(! str_ends_with($relative, '.zip'), 'Nested zips must not be present in module/: '.$relative);
@@ -262,3 +264,4 @@ foreach (module_files($root.'/module') as $file) {
 }
 
 echo "ModuleStandaloneStructureTest passed\n";
+};

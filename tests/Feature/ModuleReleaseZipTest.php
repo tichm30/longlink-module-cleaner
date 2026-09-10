@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__).'/TestSupport.php';
 
+return static function (): void {
+
 $root = module_repo_root();
 $manifest = module_manifest();
 $version = (string) ($manifest['version'] ?? '');
@@ -52,3 +54,4 @@ $checksum = trim((string) file_get_contents($zip.'.sha256'));
 module_assert(str_contains($checksum, 'longlink-module-cleaner-'.$version.'.zip'), 'Checksum sidecar must reference the release zip.');
 
 echo "ModuleReleaseZipTest passed\n";
+};

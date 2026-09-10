@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__).'/TestSupport.php';
 
+return static function (): void {
+
 $root = module_repo_root();
-$planSource = (string) file_get_contents($root.'/module/src/Support/CleanupPlanService.php');
-$inventorySource = (string) file_get_contents($root.'/module/src/Support/ResidueInventoryService.php');
-$backupSource = (string) file_get_contents($root.'/module/src/Support/ModuleBackupService.php');
-$orphanSource = (string) file_get_contents($root.'/module/src/Support/OrphanTableDetector.php');
-$persistenceSource = (string) file_get_contents($root.'/module/src/Support/CleanerPersistenceService.php');
-$dependencySource = (string) file_get_contents($root.'/module/src/Support/DependencyGraphService.php');
-$quarantineSource = (string) file_get_contents($root.'/module/src/Support/ModuleQuarantineService.php');
-$controllerSource = (string) file_get_contents($root.'/module/src/Http/Controllers/ModuleCleanerController.php');
+$planSource = (string) file_get_contents(module_source_root().'/src/Support/CleanupPlanService.php');
+$inventorySource = (string) file_get_contents(module_source_root().'/src/Support/ResidueInventoryService.php');
+$backupSource = (string) file_get_contents(module_source_root().'/src/Support/ModuleBackupService.php');
+$orphanSource = (string) file_get_contents(module_source_root().'/src/Support/OrphanTableDetector.php');
+$persistenceSource = (string) file_get_contents(module_source_root().'/src/Support/CleanerPersistenceService.php');
+$dependencySource = (string) file_get_contents(module_source_root().'/src/Support/DependencyGraphService.php');
+$quarantineSource = (string) file_get_contents(module_source_root().'/src/Support/ModuleQuarantineService.php');
+$controllerSource = (string) file_get_contents(module_source_root().'/src/Http/Controllers/ModuleCleanerController.php');
 $viewSource = '';
-foreach (module_files($root.'/module/resources/views/admin') as $viewFile) {
+foreach (module_files(module_source_root().'/resources/views/admin') as $viewFile) {
     $viewSource .= (string) file_get_contents($viewFile)."\n";
 }
 
@@ -103,3 +105,4 @@ foreach (['copyDirectory', 'recordQuarantineItem', 'quarantine_manifest.json'] a
 }
 
 echo "CleanerSafetyContractTest passed\n";
+};

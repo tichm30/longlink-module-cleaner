@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__).'/TestSupport.php';
 
+return static function (): void {
+
 $root = module_repo_root();
-$controllerSource = (string) file_get_contents($root.'/module/src/Http/Controllers/ModuleCleanerController.php');
-$registryView = (string) file_get_contents($root.'/module/resources/views/admin/registry.blade.php');
-$messages = (string) file_get_contents($root.'/module/resources/lang/en/messages.php');
+$controllerSource = (string) file_get_contents(module_source_root().'/src/Http/Controllers/ModuleCleanerController.php');
+$registryView = (string) file_get_contents(module_source_root().'/resources/views/admin/registry.blade.php');
+$messages = (string) file_get_contents(module_source_root().'/resources/lang/en/messages.php');
 
 foreach ([
     'LengthAwarePaginator' => 'Registry must paginate server-side.',
@@ -36,3 +38,4 @@ foreach (['search', 'search_action', 'search_placeholder', 'pagination'] as $key
 }
 
 echo "RegistryListingStandardTest passed\n";
+};
