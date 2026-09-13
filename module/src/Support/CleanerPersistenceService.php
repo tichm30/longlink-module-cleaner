@@ -25,7 +25,7 @@ class CleanerPersistenceService
             'addon_module_id' => $module->id,
             'module_key' => (string) $module->key,
             'module_version' => (string) $module->version,
-            'status' => 'prepared',
+            'status' => ($plan['blocked'] ?? false) ? 'blocked' : 'prepared',
             'surfaces' => json_encode($plan['surfaces'] ?? [], JSON_THROW_ON_ERROR),
             'plan_payload' => json_encode($plan, JSON_THROW_ON_ERROR),
             'dependency_graph' => json_encode($dependencyGraph, JSON_THROW_ON_ERROR),

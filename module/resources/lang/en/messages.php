@@ -96,6 +96,7 @@ return [
         'quarantine_body' => 'Copy module files, storage paths, and stored packages into Cleaner quarantine before host purge handoff.',
         'quarantine_confirmed' => 'Quarantine copied',
         'create_quarantine' => 'Create Quarantine',
+        'preservation_blocked' => 'Removal blocked by preservation requirements.',
         'execute_title' => 'Host Purge Handoff',
         'execute_body' => 'Execution posts to the host Addon Modules purge route with backup confirmation and typed module-key confirmation.',
         'backup_required' => 'Create the backup before executing the host purge handoff.',

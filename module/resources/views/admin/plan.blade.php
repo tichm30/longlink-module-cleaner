@@ -35,7 +35,7 @@
             @else
                 <div class="pill-list">
                     <span class="pill info">{{ $plan['module_key'] ?? $module->key }}</span>
-                    <span class="pill success">{{ ($plan['dry_run'] ?? false) ? 'Dry run' : 'Prepared' }}</span>
+                    <span @class(['pill', 'danger' => $plan['blocked'] ?? false, 'success' => ! ($plan['blocked'] ?? false)])>{{ ($plan['blocked'] ?? false) ? __('module_cleaner::messages.plan.preservation_blocked') : (($plan['dry_run'] ?? false) ? 'Dry run' : 'Prepared') }}</span>
                     @foreach (($plan['surfaces'] ?? []) as $surface)
                         <span class="pill">{{ $surface }}</span>
                     @endforeach
@@ -60,6 +60,9 @@
                                             {{ implode(', ', $item['target']) }}
                                         @else
                                             {{ $item['target'] ?? '' }}
+                                        @endif
+                                        @if (! empty($item['reason']))
+                                            <p class="form-help">{{ $item['reason'] }}</p>
                                         @endif
                                     </td>
                                 </tr>
@@ -114,7 +117,9 @@
                     <div class="settings-control-card">
                         <h3>{{ __('module_cleaner::messages.plan.execute_title') }}</h3>
                         <p class="form-help">{{ __('module_cleaner::messages.plan.execute_body') }}</p>
-                        @if ($backup && $execution)
+                        @if ($plan['blocked'] ?? false)
+                            <x-empty-state :description="__('module_cleaner::messages.plan.preservation_blocked')" />
+                        @elseif ($backup && $execution)
                             <form method="POST" action="{{ route('admin.settings.addon-modules.modules.purge', $module) }}">
                                 @csrf
                                 <input type="hidden" name="backup_confirmed" value="1">

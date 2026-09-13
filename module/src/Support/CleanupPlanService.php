@@ -67,7 +67,7 @@ class CleanupPlanService
         }
 
         $plan = $this->persistence->recordPlan($module, $plan, $dependencyGraph, $orphanSnapshot, $actor);
-        $this->audit->record($module, 'dry_run', 'planned', $plan, $actor);
+        $this->audit->record($module, 'dry_run', ($plan['blocked'] ?? false) ? 'blocked' : 'planned', $plan, $actor);
 
         return $plan;
     }
