@@ -14,7 +14,7 @@ module_assert_same('Module Cleaner', $manifest['name'] ?? null, 'Manifest displa
 module_assert((bool) preg_match('/^0\.1\.[0-9]+[a-z](?:-CX)?$/', (string) ($manifest['version'] ?? '')), 'Manifest version must be a canonical Module Cleaner release.');
 module_assert_same('Modules\\ModuleCleaner\\ModuleCleanerModuleProvider', $manifest['runtime']['provider'] ?? null, 'Runtime provider must point at the module provider.');
 module_assert_same('src/', $manifest['autoload']['psr-4']['Modules\\ModuleCleaner\\'] ?? null, 'PSR-4 autoload root must be src/.');
-module_assert_same('0.7.50w-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the current host listing-table gate baseline.');
+module_assert_same('0.7.61z-CX', $manifest['requires_host_min_version'] ?? null, 'Cleaner must require the host preservation-admission baseline.');
 
 $expectedOwnedTables = [
     'module_cleaner_cleanup_logs',
