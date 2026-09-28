@@ -55,7 +55,7 @@
             </div>
         </x-card>
 
-        <div class="form-grid four">
+        <div class="form-grid two">
             <x-card :title="__('module_cleaner::messages.details.settings')">
                 <div class="pill-list">
                     @forelse ($entry['settings'] as $setting)
@@ -87,7 +87,7 @@
             </div>
         </x-card>
 
-        <div class="form-grid four">
+        <div class="form-grid two">
             <x-card :title="__('module_cleaner::messages.details.storage')">
                 <div class="pill-list">
                     @forelse ($entry['storage'] as $storage)

@@ -18,7 +18,7 @@
                 </div>
             </x-card>
 
-            <div class="form-grid four">
+            <div class="form-grid two">
                 <x-card :title="__('module_cleaner::messages.dashboard.modules_title')" :description="__('module_cleaner::messages.dashboard.snapshot_help')">
                     <span class="eyebrow">{{ __('module_cleaner::messages.dashboard.snapshots') }}</span>
                     <strong>{{ $summary['snapshots'] }} / {{ $summary['modules'] }}</strong>

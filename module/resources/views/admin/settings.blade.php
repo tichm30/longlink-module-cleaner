@@ -14,7 +14,7 @@
             @csrf
 
             <div class="stack">
-                <div class="form-grid four">
+                <div class="form-grid two">
                     <x-card :title="__('module_cleaner::messages.settings.safety')">
                         <p class="form-help">{{ __('module_cleaner::messages.plan.guard') }}</p>
                         <p class="form-help">module_cleaner.purge is required for backup creation and host purge handoff.</p>

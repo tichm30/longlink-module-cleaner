@@ -228,6 +228,8 @@ module_assert(str_contains($viewSource, 'data-table-wrap'), 'Cleaner UI must use
 module_assert(str_contains($viewSource, 'data-table-wrap is-card-table'), 'Cleaner UI must use the full host mobile-card table wrapper.');
 module_assert(str_contains($viewSource, 'data-table is-mobile-card-table'), 'Cleaner UI must use the host mobile-card table class.');
 module_assert(str_contains($viewSource, 'class="stack"'), 'Cleaner UI must use the canonical host stack utility between major cards.');
+module_assert(! preg_match('/<div class="form-grid four">\s*<x-card/s', $viewSource), 'Cleaner card groups must not regress to cramped four-column operational layouts.');
+module_assert(substr_count($viewSource, 'class="form-grid two"') >= 4, 'Cleaner card groups use responsive two-column layouts.');
 module_assert(! str_contains($viewSource, 'form-stack'), 'Cleaner UI must not ship deprecated module-invented form-stack classes.');
 module_assert(! str_contains($viewSource, '@php('), 'Cleaner views must use block-form @php directives so inline expressions do not trip Blade compilation.');
 module_assert(str_contains($viewSource, 'pill-list'), 'Cleaner UI must use host token-backed pill layout.');

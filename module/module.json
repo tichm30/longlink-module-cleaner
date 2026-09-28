@@ -1,7 +1,7 @@
 {
     "key": "module_cleaner",
     "name": "Module Cleaner",
-    "version": "0.1.1c-CX",
+    "version": "0.1.1d-CX",
     "description": "Inventory addon residue, prepare safe cleanup plans, and coordinate backups, quarantine, and purge handoff.",
     "runtime": {
         "provider": "Modules\\ModuleCleaner\\ModuleCleanerModuleProvider"
@@ -193,6 +193,7 @@
         "Destructive purge execution remains host-guarded: backup first, typed confirmation, inactive module, and RequireStepUpForSensitiveActions on the host purge primitive."
     ],
     "release_notes": [
+        "0.1.1d-CX replaces four-column card rows with responsive two-column operational layouts across the Cleaner dashboard, detail and settings surfaces.",
         "0.1.1a-CX adds shared host Restore Defaults support for Module Cleaner settings.",
         "0.1.0z-CX declares Module Cleaner confirmation module key controls as references.",
         "0.1.0z-CX replaces the retired licensing manifest block with longlink.module_entitlement.v1.",
